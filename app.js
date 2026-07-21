@@ -133,6 +133,136 @@ const MOCK_ARTICLES = [
       "Writers and creators face fewer project greenlights as streaming platforms prioritize high-margin live TV."
     ],
     entities: ["Netflix", "Amazon Prime Video", "Peacock", "NFL", "Variety"]
+  },
+  {
+    id: "tech-02",
+    category: "Tech",
+    title: "Quantum Leap: Researchers Unveil Room-Temperature Superconductor Success",
+    excerpt: "A global consortium of physicists demonstrates zero resistance at ambient temperatures, opening a new era of quantum computing and lossless grid transmission.",
+    author: "Dr. Alistair Vance",
+    source: "Wired",
+    date: "Oct 25, 2023",
+    readTime: "8 min read",
+    popular: true,
+    views: 9420,
+    content: [
+      "Physicists have chased the holy grail of room-temperature superconductivity for over a century. Today, an international collaboration of research laboratories published a peer-reviewed paper confirming a newly synthesized lutetium-hydride matrix that exhibits zero electrical resistance at 21 degrees Celsius under moderate pressures.",
+      "The practical implications are staggering. Electric grids running on room-temperature superconductors would suffer absolutely zero energy loss during long-distance transmission, saving billions of megawatt-hours and drastically lowering greenhouse gas emissions.",
+      "Furthermore, quantum processors could operate without the need for complex, hyper-expensive liquid helium cooling systems. Standard consumer electronics could see massive battery efficiency upgrades, while ultra-fast maglev trains could be deployed at a fraction of current engineering costs.",
+      "Several validation groups are already racing to replicate the results. While initial skepticism persists due to past retracted claims in the field, this multi-lab verified study offers the strongest, most transparent evidence yet that the era of practical superconductivity has officially arrived."
+    ],
+    sentiment: { positive: 92, neutral: 6, negative: 2, verdict: "Revolutionary" },
+    summary: "A international team of physicists has demonstrated zero electrical resistance at ambient room temperatures using a synthesized lutetium-hydride matrix. If successfully replicated, this breakthrough could eliminate energy transmission losses, advance quantum computing, and revolutionize transport systems.",
+    takeaways: [
+      "Zero electrical resistance was achieved at 21°C under moderate pressure using a lutetium-hydride compound.",
+      "The technology could completely eliminate power grid transmission losses and democratize high-speed maglev transit.",
+      "Replication trials are currently underway across multiple independent laboratories globally to confirm the results."
+    ],
+    entities: ["Lutetium-hydride", "Wired", "Quantum computing", "Superconductivity"]
+  },
+  {
+    id: "finance-02",
+    category: "Finance",
+    title: "Federal Reserve Announces Digital Dollar Initiative to Modernize Payments",
+    excerpt: "The central bank launches its official pilot framework for a Central Bank Digital Currency (CBDC), aiming to speed up settlements and lower transaction fees.",
+    author: "Sarah Jenkins",
+    source: "The Wall Street Journal",
+    date: "Oct 25, 2023",
+    readTime: "6 min read",
+    popular: false,
+    views: 4120,
+    content: [
+      "The Federal Reserve has officially taken its most decisive step toward the modernization of the global financial system. Today, Fed officials unveiled plans for a Central Bank Digital Currency (CBDC) pilot program, colloquially named the Digital Dollar Initiative.",
+      "The initiative aims to address inefficiencies in contemporary interbank settlement networks, offering near-instantaneous domestic and cross-border transactions at a fraction of the current cost. Users will be able to access the digital currency via federally-insured commercial bank accounts.",
+      "Privacy advocates and decentralized crypto enthusiasts have raised immediate concerns. Critics suggest that a government-controlled ledger could pave the way for unprecedented surveillance of private citizen spending habits and financial behaviors.",
+      "Fed Chair Jerome Powell sought to calm these concerns, emphasizing that the pilot is strictly focused on wholesale transactions and interbank clearing systems. 'Our goal is to complement, not replace, physical cash or private sector innovations,' Powell stated."
+    ],
+    sentiment: { positive: 45, neutral: 40, negative: 15, verdict: "Pragmatic" },
+    summary: "The Federal Reserve has launched a pilot program for a Central Bank Digital Currency (CBDC) to modernize settlement systems and lower fees. While promising major efficiency gains, the initiative has drawn sharp criticism from privacy advocates concerned about financial surveillance.",
+    takeaways: [
+      "The Federal Reserve announced the Digital Dollar Initiative pilot program for interbank settlements.",
+      "The CBDC is designed to achieve near-instant domestic and cross-border payment clearing.",
+      "Concerns regarding privacy and governmental financial surveillance remain prominent topics of discussion."
+    ],
+    entities: ["Federal Reserve", "CBDC", "Jerome Powell", "The Wall Street Journal"]
+  },
+  {
+    id: "science-02",
+    category: "Science",
+    title: "James Webb Telescope Discovers Atmospheric Water Vapor on Distant Exoplanet",
+    excerpt: "Spectroscopic readings from the deep space telescope confirm presence of high-density clouds and water signatures in the atmosphere of LHS 475 b.",
+    author: "Dr. Neil Sterling",
+    source: "Nature Astronomy",
+    date: "Oct 24, 2023",
+    readTime: "5 min read",
+    popular: true,
+    views: 5210,
+    content: [
+      "NASA's James Webb Space Telescope has achieved yet another historic milestone in exoplanetary exploration. Utilizing its near-infrared spectrograph, the space observatory detected undeniable signatures of atmospheric water vapor on LHS 475 b, an Earth-sized rocky world situated 41 light-years away.",
+      "While the planet orbits tightly around its host red dwarf star, completing a full orbit in just two Earth days, the presence of an atmosphere containing water vapor suggests it could be much more resilient to stellar winds than previously theorized.",
+      "The discovery marks the first time water vapor has been conclusively identified in the atmosphere of an Earth-sized planet orbiting in a red dwarf system, which represents the most common stellar population in the Milky Way.",
+      "Astrophysicists caution that LHS 475 b is highly unlikely to support liquid surface water or life as we know it, given its extreme surface temperatures. However, this represents a major validation of JWST's capacity to analyze secondary atmospheres of small, terrestrial planets."
+    ],
+    sentiment: { positive: 88, neutral: 12, negative: 0, verdict: "Outstanding" },
+    summary: "The James Webb Space Telescope has detected atmospheric water vapor on the Earth-sized exoplanet LHS 475 b. While the planet's extreme heat makes it uninhabitable, the discovery proves JWST's capability to analyze rocky planet atmospheres.",
+    takeaways: [
+      "JWST detected water vapor signatures on the Earth-sized terrestrial exoplanet LHS 475 b.",
+      "The planet orbits a red dwarf star 41 light-years away and completes an orbit in two days.",
+      "The finding validates the telescope's capability to analyze thin, secondary atmospheres of small rocky worlds."
+    ],
+    entities: ["James Webb Space Telescope", "JWST", "LHS 475 b", "NASA", "Nature Astronomy"]
+  },
+  {
+    id: "health-02",
+    category: "Health",
+    title: "Pioneering CRISPR Gene Editing Therapy Approved for Hereditary Blindness",
+    excerpt: "Medical history is made as regulatory authorities approve the first-ever in-vivo gene-editing cure for patients suffering from LCA disease.",
+    author: "Dr. Elena Rostova",
+    source: "The Lancet",
+    date: "Oct 23, 2023",
+    readTime: "6 min read",
+    popular: false,
+    views: 3820,
+    content: [
+      "In a monumental victory for genetic medicine, international health regulators have approved a pioneering CRISPR-based gene editing therapy designed to cure Leber Congenital Amaurosis (LCA), a rare hereditary disorder that causes complete blindness from childhood.",
+      "Unlike previous genetic therapies that require harvesting cells for ex-vivo modification, this newly approved treatment, named LuxEdit, is administered via a single micro-injection directly into the retina, where it actively repairs the mutated RPE65 gene in-vivo.",
+      "Clinical trial data showed breathtaking results: over 85% of treated patients experienced significant visual acuity recovery within ninety days, with many regaining the ability to navigate complex spaces and read standard text without assistance.",
+      "The therapy is not without controversy, primarily due to its projected price tag of over $750,000 per eye. However, insurance consortia are already negotiating outcomes-based payment structures, recognizing the immense value of a single-dose permanent cure."
+    ],
+    sentiment: { positive: 80, neutral: 15, negative: 5, verdict: "Extremely Promising" },
+    summary: "Regulators have approved LuxEdit, a groundbreaking in-vivo CRISPR gene-editing therapy that cures hereditary childhood blindness by repairing the mutated RPE65 gene directly in the retina. While highly expensive, clinical trials demonstrated a massive 85% visual recovery rate.",
+    takeaways: [
+      "LuxEdit was approved as the first in-vivo CRISPR-based gene-editing therapy for hereditary blindness.",
+      "The single-dose retinal micro-injection directly repairs the mutated RPE65 gene.",
+      "Over 85% of clinical trial participants experienced dramatic improvements in visual acuity."
+    ],
+    entities: ["CRISPR", "LuxEdit", "RPE65", "The Lancet", "LCA"]
+  },
+  {
+    id: "entertainment-02",
+    category: "Entertainment",
+    title: "Hollywood Embraces Generative AI in Groundbreaking Union Agreement",
+    excerpt: "Major studios and creative unions establish a landmark regulatory framework, paving the path for legal, consent-based digital replication of actors and writers.",
+    author: "Michael Chang",
+    source: "The Hollywood Reporter",
+    date: "Oct 22, 2023",
+    readTime: "5 min read",
+    popular: true,
+    views: 6710,
+    content: [
+      "After months of intense negotiations, Hollywood studios and major creative unions have ratified a historic agreement that establishes the world's first comprehensive legal framework for the use of Generative AI in entertainment production.",
+      "The agreement mandates strict consent requirements, ensuring that actors must be compensated and explicitly agree to any digital voice or likeness replication. Similarly, writers are guaranteed credit and compensation if AI tools are used to assist in drafting scripts.",
+      "Industry analysts believe this deal will unleash a wave of high-tech production methods. Studios can now safely utilize AI for automated foreign language dubbing, seamless digital de-aging, and advanced visual effects without fear of legal challenges or union strikes.",
+      "While some progressive creators remain worried about the long-term impact on entry-level jobs, the majority of the community has welcomed the resolution. 'We have successfully protected the human element while embracing the future of cinematic technology,' union representatives stated."
+    ],
+    sentiment: { positive: 65, neutral: 25, negative: 10, verdict: "Encouraging/Optimistic" },
+    summary: "Hollywood studios and creative unions have signed a historic contract regulating the use of Generative AI. The deal guarantees strict consent, credit, and compensation for human creators while enabling studios to legally deploy advanced digital replication technologies.",
+    takeaways: [
+      "Studios and creative unions ratified a historic agreement establishing legal frameworks for Generative AI.",
+      "The contract requires explicit consent and fair compensation for digital voice and likeness replication.",
+      "The agreement clears the path for advanced, legally protected cinematic AI applications in Hollywood."
+    ],
+    entities: ["Generative AI", "Hollywood", "The Hollywood Reporter", "Actors Guild"]
   }
 ];
 
