@@ -1,0 +1,190 @@
+/* Premium Transitions & Color Schema Variables */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800&family=Georgia:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --transition-speed: 0.3s;
+}
+
+/* Base resets & scrollbars */
+html {
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Webkit Scrollbar dynamic styling */
+.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+.sepia ::-webkit-scrollbar-thumb {
+  background: #ebd1a0;
+  border-radius: 9999px;
+}
+.sepia ::-webkit-scrollbar-thumb:hover {
+  background: #d4b584;
+}
+
+/* Custom Horizontal Live Ticker Animations */
+@keyframes ticker {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.ticker-content {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: ticker 30s linear infinite;
+}
+
+.ticker-content:hover {
+  animation-play-state: paused;
+}
+
+/* Smooth color transitions for seamless dark/light/sepia theme changes */
+body, header, aside, section, div, button, input, select, article, h1, h2, h3, h4, p, span, a {
+  transition: background-color var(--transition-speed) ease,
+              border-color var(--transition-speed) ease,
+              color var(--transition-speed) ease,
+              box-shadow var(--transition-speed) ease;
+}
+
+/* High Contrast Accessibility Overrides */
+.contrast body {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.contrast .bg-white,
+.contrast .bg-gray-50,
+.contrast .bg-gray-100,
+.contrast .bg-brand-50,
+.contrast .bg-indigo-50 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+.contrast .text-gray-900,
+.contrast .text-gray-700,
+.contrast .text-gray-600,
+.contrast .text-gray-500,
+.contrast .text-gray-400 {
+  color: #ffffff !important;
+}
+
+.contrast .text-brand-600,
+.contrast .text-indigo-600,
+.contrast .text-brand-700 {
+  color: #ffff00 !important; /* High contrast yellow */
+}
+
+.contrast .border-gray-200,
+.contrast .border-gray-100,
+.contrast .border-gray-300,
+.contrast .border {
+  border-color: #ffffff !important;
+}
+
+/* Custom interactive active elements */
+.nav-link-active {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.dark .nav-link-active {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #60a5fa;
+}
+
+.sepia .nav-link-active {
+  background-color: #f7ebd3;
+  color: #5c4017;
+}
+
+.contrast .nav-link-active {
+  border: 2px solid #ffff00;
+  color: #ffff00;
+}
+
+/* Dynamic line heights for reading */
+.lh-tight-class {
+  line-height: 1.35 !important;
+}
+
+.lh-normal-class {
+  line-height: 1.62 !important;
+}
+
+.lh-loose-class {
+  line-height: 2.0 !important;
+}
+
+/* Text Size classes for reading view */
+.text-sm-class {
+  font-size: 0.925rem !important;
+}
+
+.text-md-class {
+  font-size: 1.075rem !important;
+}
+
+.text-lg-class {
+  font-size: 1.25rem !important;
+}
+
+.text-xl-class {
+  font-size: 1.5rem !important;
+}
+
+/* Gradient subtle overlay for cards */
+.grad-overlay {
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.85) 100%);
+}
+
+.dark .grad-overlay {
+  background: linear-gradient(180deg, rgba(15,23,42,0) 0%, rgba(15,23,42,0.95) 100%);
+}
+
+/* Interactive card shadows and scale */
+.interactive-card {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.interactive-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+}
+
+.dark .interactive-card:hover {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+/* Sparkline elements */
+.spark-canvas {
+  width: 60px;
+  height: 24px;
+}
