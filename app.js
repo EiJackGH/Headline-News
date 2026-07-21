@@ -5,6 +5,60 @@
 // 1. Mock Database of Articles with Rich Metadata
 const MOCK_ARTICLES = [
   {
+    id: "sponsored-slack",
+    category: "Sponsored",
+    title: "How Slack is Revolutionizing Asynchronous Team Collaboration with AI",
+    excerpt: "Discover how Slack's newly integrated AI features are saving teams hours of manual catch-up time every single week.",
+    author: "Slack Partners",
+    source: "Slack Blog",
+    date: "Oct 26, 2023",
+    readTime: "3 min read",
+    popular: true,
+    views: 12500,
+    sponsored: true,
+    content: [
+      "In the modern era of hybrid work, communication overload is one of the biggest drivers of professional burnout. Teams are constantly bombarded with endless channels, direct messages, and continuous threads, making it difficult to find the information that actually matters.",
+      "To solve this problem, Slack has integrated native AI capabilities directly into the workspace. With Slack AI, users can instantly summarize long channels, get key takeaways from missed threads, and search across their organization's entire knowledge base with conversational natural language questions.",
+      "According to early research, these new AI tools are saving employees an average of 97 minutes per week. This means less time spent catching up on backlog, and more time focused on deep, creative work that drives actual business results.",
+      "Whether you're a small startup or a global enterprise, Slack is designed to act as your team's central nervous system—bringing people, tools, and artificial intelligence together in one seamless, conversational interface."
+    ],
+    sentiment: { positive: 92, neutral: 6, negative: 2, verdict: "Productive" },
+    summary: "Slack has introduced native AI tools to reduce workspace communication clutter, enabling instant channel summaries and semantic search. These advancements save employees an average of 97 minutes a week, allowing teams to focus on high-impact work.",
+    takeaways: [
+      "Slack AI reduces information overload by instantly summarizing long channels and active threads.",
+      "Employees using Slack AI save an average of 97 minutes of productivity time every week.",
+      "Integrated semantic search turns Slack into a centralized, conversational company knowledge base."
+    ],
+    entities: ["Slack", "Slack AI", "Collaboration", "Productivity"]
+  },
+  {
+    id: "sponsored-datastax",
+    category: "Sponsored",
+    title: "Building Scalable AI Applications in Record Time with DataStax Astra DB",
+    excerpt: "Unlock the power of vector databases to build, deploy, and scale high-fidelity RAG systems with enterprise-grade performance.",
+    author: "DataStax Engineering",
+    source: "DataStax Press",
+    date: "Oct 26, 2023",
+    readTime: "4 min read",
+    popular: true,
+    views: 11200,
+    sponsored: true,
+    content: [
+      "The rapid advancement of generative AI models has created an unprecedented demand for high-performance vector databases. To build effective Retrieval-Augmented Generation (RAG) systems, developers need database architectures that can store, index, and retrieve high-dimensional vector embeddings with millisecond-level latency.",
+      "Enter DataStax Astra DB—a serverless vector database built on the proven power of Apache Cassandra. Astra DB provides developers with a production-ready, highly scalable platform designed specifically for real-time AI workloads.",
+      "By offering deep integrations with popular frameworks like LangChain, LlamaIndex, and OpenAI, Astra DB allows developers to transition from a local prototype to a global, enterprise-grade AI deployment in a matter of minutes.",
+      "With zero-overhead serverless scaling and global active-active replication, Astra DB ensures your AI applications remain fast, reliable, and cost-effective, regardless of how quickly your user base grows."
+    ],
+    sentiment: { positive: 90, neutral: 8, negative: 2, verdict: "Performant" },
+    summary: "DataStax Astra DB offers a serverless vector database built on Apache Cassandra, designed to simplify and scale real-time AI applications. With millisecond-level vector retrieval and seamless ecosystem integrations, Astra DB empowers developers to build production-grade RAG pipelines rapidly.",
+    takeaways: [
+      "DataStax Astra DB delivers millisecond-latency vector searches built on Apache Cassandra's scalable architecture.",
+      "Seamless integrations with LangChain and LlamaIndex allow rapid transit from prototype to global production.",
+      "Serverless scaling and active-active global replication ensure high reliability with zero operational overhead."
+    ],
+    entities: ["DataStax", "Astra DB", "Cassandra", "Vector Database", "RAG"]
+  },
+  {
     id: "tech-01",
     category: "Tech",
     title: "AI Agents Take Over the Tech Industry's Mainstream Focus",
@@ -319,6 +373,7 @@ const tabAiExtractor = document.getElementById("tab-ai-extractor");
 const closeReaderBtn = document.getElementById("close-reader-btn");
 const readerTitle = document.getElementById("reader-title");
 const readerCategory = document.getElementById("reader-category");
+const readerSponsored = document.getElementById("reader-sponsored");
 const readerReadTime = document.getElementById("reader-read-time");
 const readerPubDate = document.getElementById("reader-pub-date");
 const readerAuthorName = document.getElementById("reader-author-name");
@@ -457,7 +512,7 @@ function initThemes() {
 
 // 7. Categories Engine
 function initCategories() {
-  const categories = ["All", "Tech", "Finance", "Science", "Health", "Entertainment"];
+  const categories = ["All", "Tech", "Finance", "Science", "Health", "Entertainment", "Sponsored"];
   categoryNav.innerHTML = "";
 
   categories.forEach(cat => {
@@ -478,6 +533,7 @@ function initCategories() {
     else if (cat === "Science") icon = "fa-satellite";
     else if (cat === "Health") icon = "fa-heart-pulse";
     else if (cat === "Entertainment") icon = "fa-film";
+    else if (cat === "Sponsored") icon = "fa-rectangle-ad";
 
     btn.innerHTML = `
       <span class="flex items-center gap-2">
@@ -706,14 +762,25 @@ function renderArticles() {
   filtered.forEach(art => {
     const isBookmarked = bookmarks.some(b => b.id === art.id);
     const card = document.createElement("article");
-    card.className = "bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-2xl p-5 border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 shadow-sm interactive-card flex flex-col justify-between gap-4";
+
+    if (art.sponsored) {
+      card.className = "bg-amber-50/40 dark:bg-amber-950/10 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-2xl p-5 border-2 border-amber-300 dark:border-amber-700/60 sepia:border-sepia-200 shadow-sm interactive-card flex flex-col justify-between gap-4 relative overflow-hidden";
+    } else {
+      card.className = "bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-2xl p-5 border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 shadow-sm interactive-card flex flex-col justify-between gap-4";
+    }
+
+    const badgeHtml = art.sponsored
+      ? `<span class="px-2 py-0.5 bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 font-bold rounded-md uppercase tracking-wider flex items-center gap-1">
+          <i class="fa-solid fa-rectangle-ad text-xs"></i> Sponsored
+         </span>`
+      : `<span class="px-2 py-0.5 bg-brand-50 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 font-bold rounded-md uppercase tracking-wider">
+          ${art.category}
+         </span>`;
 
     card.innerHTML = `
       <div class="space-y-2">
         <div class="flex justify-between items-center text-[10px]">
-          <span class="px-2 py-0.5 bg-brand-50 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 font-bold rounded-md uppercase tracking-wider">
-            ${art.category}
-          </span>
+          ${badgeHtml}
           <div class="flex items-center gap-2 text-gray-400">
             <span>${art.readTime}</span>
             <span>•</span>
@@ -764,6 +831,15 @@ window.openActiveReader = function(id) {
   // Apply data details
   readerTitle.innerText = art.title;
   readerCategory.innerText = art.category;
+
+  if (art.sponsored) {
+    readerSponsored.style.display = "inline-flex";
+    readerCategory.style.display = "none";
+  } else {
+    readerSponsored.style.display = "none";
+    readerCategory.style.display = "inline-block";
+  }
+
   readerReadTime.innerText = art.readTime;
   readerPubDate.innerText = art.date;
   readerAuthorName.innerText = art.author;
