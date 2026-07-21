@@ -833,6 +833,20 @@ function renderArticles() {
           <button class="p-1.5 text-gray-400 hover:text-brand-600 transition-colors" onclick="toggleBookmark('${art.id}', event)">
             <i class="${isBookmarked ? 'fa-solid text-brand-600' : 'fa-regular'} fa-bookmark"></i>
           </button>
+
+          <!-- Details / Ad details button -->
+          ${art.sponsored ? `
+            <button class="px-3 py-1.5 bg-amber-100 hover:bg-amber-200 text-amber-800 dark:bg-amber-950/40 dark:hover:bg-amber-900/60 font-semibold rounded-lg flex items-center gap-1 text-[11px]" onclick="openArticleDetails('${art.id}', event)">
+              <i class="fa-solid fa-circle-info text-[9px]"></i>
+              Ad details
+            </button>
+          ` : `
+            <button class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-950/40 dark:hover:bg-blue-900/60 font-semibold rounded-lg flex items-center gap-1 text-[11px]" onclick="openArticleDetails('${art.id}', event)">
+              <i class="fa-solid fa-circle-info text-[9px]"></i>
+              Details
+            </button>
+          `}
+
           <button class="px-3 py-1.5 bg-gray-50 hover:bg-brand-50 dark:bg-gray-900 dark:hover:bg-brand-950/40 text-brand-600 dark:text-brand-400 font-semibold rounded-lg flex items-center gap-1 text-[11px]" onclick="openActiveReader('${art.id}')">
             Read
             <i class="fa-solid fa-arrow-right text-[9px]"></i>
@@ -869,6 +883,19 @@ window.openActiveReader = function(id) {
   readerAuthorName.innerText = art.author;
   readerAuthorSource.innerText = `Published via ${art.source}`;
   readerAuthorAvatar.innerText = art.author.charAt(0);
+
+  // Dynamic state for Reader details button
+  const detailsBtn = document.getElementById("reader-details-btn");
+  const detailsBtnText = document.getElementById("reader-details-btn-text");
+  if (detailsBtn && detailsBtnText) {
+    if (art.sponsored) {
+      detailsBtnText.innerText = "Ad details";
+      detailsBtn.className = "p-2 bg-amber-100 text-amber-800 hover:bg-amber-200 dark:bg-amber-950/40 dark:text-amber-400 rounded-xl transition-all flex items-center gap-2 text-sm font-semibold";
+    } else {
+      detailsBtnText.innerText = "Details";
+      detailsBtn.className = "p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 dark:bg-blue-950/40 dark:text-blue-400 rounded-xl transition-all flex items-center gap-2 text-sm font-semibold";
+    }
+  }
 
   // Format content body paragraphs
   readerContentText.innerHTML = "";
@@ -1398,6 +1425,120 @@ window.closeStockModal = function() {
   }, 200);
 }
 
+window.openArticleDetails = function(id, event) {
+  if (event) {
+    event.stopPropagation();
+  }
+
+  const art = MOCK_ARTICLES.find(a => a.id === id);
+  if (!art) return;
+
+  const modal = document.getElementById("article-details-modal");
+  const box = document.getElementById("article-details-modal-box");
+  const badge = document.getElementById("details-modal-badge");
+  const headline = document.getElementById("details-modal-headline");
+  const title = document.getElementById("details-modal-title");
+  const author = document.getElementById("details-modal-author");
+  const date = document.getElementById("details-modal-date");
+  const views = document.getElementById("details-modal-views");
+  const readtime = document.getElementById("details-modal-readtime");
+  const summary = document.getElementById("details-modal-summary");
+  const takeaways = document.getElementById("details-modal-takeaways");
+  const verdict = document.getElementById("details-modal-sentiment-verdict");
+  const barPos = document.getElementById("details-modal-sentiment-positive");
+  const barNeu = document.getElementById("details-modal-sentiment-neutral");
+  const barNeg = document.getElementById("details-modal-sentiment-negative");
+  const pctPos = document.getElementById("details-modal-pos-pct");
+  const pctNeu = document.getElementById("details-modal-neu-pct");
+  const pctNeg = document.getElementById("details-modal-neg-pct");
+  const entities = document.getElementById("details-modal-entities");
+  const readBtn = document.getElementById("details-modal-read-btn");
+
+  if (!modal || !box) return;
+
+  // Set Headline & Badge
+  if (art.sponsored) {
+    headline.innerText = "Ad Details & AI Sponsor Insights";
+    badge.innerText = "Sponsored";
+    badge.className = "px-2.5 py-1 bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 font-bold rounded-lg text-xs uppercase tracking-wider";
+  } else {
+    headline.innerText = "Article Details & AI Analysis";
+    badge.innerText = art.category;
+    badge.className = "px-2.5 py-1 bg-brand-50 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 font-bold rounded-lg text-xs uppercase tracking-wider";
+  }
+
+  // Basic info
+  title.innerText = art.title;
+  author.innerText = `By ${art.author} in ${art.source}`;
+  date.innerText = art.date;
+  views.innerHTML = `<i class="fa-solid fa-eye mr-1"></i> ${art.views ? art.views.toLocaleString() : 'N/A'} views`;
+  readtime.innerHTML = `<i class="fa-solid fa-clock mr-1"></i> ${art.readTime}`;
+
+  // AI summary
+  summary.innerText = art.summary || "No executive summary available for this item.";
+
+  // Key takeaways list
+  takeaways.innerHTML = "";
+  if (art.takeaways && art.takeaways.length > 0) {
+    art.takeaways.forEach(t => {
+      const li = document.createElement("li");
+      li.className = "flex items-start gap-2";
+      li.innerHTML = `<i class="fa-solid fa-check text-green-500 mt-1 shrink-0"></i> <span>${t}</span>`;
+      takeaways.appendChild(li);
+    });
+  } else {
+    takeaways.innerHTML = `<li class="text-gray-400 italic">No takeaways available.</li>`;
+  }
+
+  // Sentiment analysis
+  const sent = art.sentiment || { positive: 50, neutral: 50, negative: 0, verdict: "Neutral" };
+  verdict.innerText = `${sent.positive}% ${sent.verdict}`;
+  barPos.style.width = `${sent.positive}%`;
+  barNeu.style.width = `${sent.neutral}%`;
+  barNeg.style.width = `${sent.negative}%`;
+  pctPos.innerText = `${sent.positive}%`;
+  pctNeu.innerText = `${sent.neutral}%`;
+  pctNeg.innerText = `${sent.negative}%`;
+
+  // Named entities tags
+  entities.innerHTML = "";
+  if (art.entities && art.entities.length > 0) {
+    art.entities.forEach(ent => {
+      const sp = document.createElement("span");
+      sp.className = "px-2 py-1 bg-brand-50 text-brand-700 dark:bg-brand-950/40 dark:text-brand-400 rounded-lg text-[10px] font-bold border border-brand-100 dark:border-brand-900/50";
+      sp.innerText = ent;
+      entities.appendChild(sp);
+    });
+  } else {
+    entities.innerHTML = `<span class="text-gray-400 italic text-[10px]">No tags available.</span>`;
+  }
+
+  // Read button
+  readBtn.onclick = function() {
+    window.closeArticleDetails();
+    openActiveReader(art.id);
+  };
+
+  // Show Modal
+  modal.classList.remove("hidden");
+  setTimeout(() => {
+    box.classList.remove("scale-95");
+    box.classList.add("scale-100");
+  }, 10);
+};
+
+window.closeArticleDetails = function() {
+  const modal = document.getElementById("article-details-modal");
+  const box = document.getElementById("article-details-modal-box");
+  if (!modal || !box) return;
+
+  box.classList.add("scale-95");
+  box.classList.remove("scale-100");
+  setTimeout(() => {
+    modal.classList.add("hidden");
+  }, 200);
+};
+
 
 // 17. Reading Timer Tracker
 function startReadingTimer() {
@@ -1614,4 +1755,31 @@ function setupEventListeners() {
       sidebar.scrollIntoView({ behavior: "smooth" });
     }
   });
+
+  // Article details modal close events
+  const closeDetailsModal = document.getElementById("close-details-modal");
+  if (closeDetailsModal) {
+    closeDetailsModal.addEventListener("click", () => {
+      window.closeArticleDetails();
+    });
+  }
+
+  const articleDetailsModal = document.getElementById("article-details-modal");
+  if (articleDetailsModal) {
+    articleDetailsModal.addEventListener("click", (e) => {
+      if (e.target === articleDetailsModal) {
+        window.closeArticleDetails();
+      }
+    });
+  }
+
+  // Active Reader details button click event
+  const readerDetailsBtn = document.getElementById("reader-details-btn");
+  if (readerDetailsBtn) {
+    readerDetailsBtn.addEventListener("click", () => {
+      if (activeArticleId) {
+        window.openArticleDetails(activeArticleId);
+      }
+    });
+  }
 }
