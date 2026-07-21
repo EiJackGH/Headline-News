@@ -467,12 +467,36 @@ document.addEventListener("DOMContentLoaded", () => {
   updateReadingStatsUI();
   updateBookmarksCount();
   setupEventListeners();
+  checkInternetExplorer();
 
   // Load Sim Shares details
   STOCK_DATA.forEach(stock => {
     stock.sharesOwned = parseInt(localStorage.getItem(`shares_${stock.symbol}`)) || 0;
   });
 });
+
+// Internet Explorer Detection and Alert
+function checkInternetExplorer() {
+  const userAgent = window.navigator.userAgent;
+  const isIE = userAgent.indexOf("MSIE ") > -1 || userAgent.indexOf("Trident/") > -1 || !!document.documentMode;
+
+  // Also check URL parameters to force show the banner for visual validation
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceIE = urlParams.get("forceIE") === "true";
+
+  if (isIE || forceIE) {
+    const banner = document.getElementById("ie-warning-banner");
+    const closeBtn = document.getElementById("close-ie-warning");
+    if (banner) {
+      banner.classList.remove("hidden");
+    }
+    if (closeBtn && banner) {
+      closeBtn.addEventListener("click", () => {
+        banner.classList.add("hidden");
+      });
+    }
+  }
+}
 
 // 6. Theme Engine
 function initThemes() {
