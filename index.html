@@ -640,6 +640,95 @@
     </div>
   </main>
 
+  <!-- Platform Footer -->
+  <footer class="border-t border-gray-200 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:bg-black py-12 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-8 pb-8 border-b border-gray-100 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white">
+
+        <!-- Left Side: Brand & Description -->
+        <div class="md:col-span-4 space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="bg-brand-600 text-white p-2 rounded-xl shadow-lg shadow-brand-500/20 flex items-center justify-center">
+              <i class="fa-solid fa-newspaper text-xl"></i>
+            </div>
+            <div>
+              <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 bg-clip-text text-transparent dark:from-brand-400 dark:to-indigo-400">
+                Headline News
+              </span>
+              <span class="block text-[10px] uppercase tracking-wider text-gray-500 dark:text-gray-400 sepia:text-sepia-800 font-semibold">
+                AI-Powered Platform
+              </span>
+            </div>
+          </div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 sepia:text-sepia-800 leading-relaxed">
+            Your premium real-time news aggregator and intelligent scraper engine. Seamlessly parsing readability DOM trees, synthesizing automated executive insights, and delivering high-fidelity global coverage across five key industrial sectors.
+          </p>
+        </div>
+
+        <!-- Middle-Left: Quick Navigation Links -->
+        <div class="md:col-span-3 md:col-start-6 space-y-4">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 sepia:text-sepia-800">
+            Quick Navigation
+          </h4>
+          <ul class="space-y-2 text-sm font-medium text-gray-600 dark:text-gray-300 sepia:text-sepia-900">
+            <li>
+              <button id="footer-nav-feed" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-house text-xs"></i> Real-Time Feed
+              </button>
+            </li>
+            <li>
+              <button id="footer-nav-extractor" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-xs text-brand-500"></i> AI Article Extractor
+              </button>
+            </li>
+            <li>
+              <button id="footer-nav-bookmarks" class="hover:text-brand-600 dark:hover:text-brand-400 transition-colors flex items-center gap-2">
+                <i class="fa-solid fa-bookmark text-xs"></i> Saved Bookmarks
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Middle-Right: Categories Links (Footer-specific trigger / category visual reference) -->
+        <div class="md:col-span-3 space-y-4">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 sepia:text-sepia-800">
+            News Categories
+          </h4>
+          <ul class="space-y-2 text-sm font-medium text-gray-600 dark:text-gray-300 sepia:text-sepia-900" id="footer-categories-list">
+            <li><button class="footer-cat-btn hover:text-brand-600 transition-colors text-left" data-category="Tech">Tech Industry</button></li>
+            <li><button class="footer-cat-btn hover:text-brand-600 transition-colors text-left" data-category="Finance">Finance & Markets</button></li>
+            <li><button class="footer-cat-btn hover:text-brand-600 transition-colors text-left" data-category="Science">Space & Science</button></li>
+            <li><button class="footer-cat-btn hover:text-brand-600 transition-colors text-left" data-category="Health">Biotech & Health</button></li>
+            <li><button class="footer-cat-btn hover:text-brand-600 transition-colors text-left" data-category="Entertainment">Entertainment & Live</button></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Row: Social Icons, Legal links & Copyright -->
+      <div class="flex flex-col sm:flex-row items-center justify-between pt-8 gap-4">
+
+        <!-- Social Icons -->
+        <div class="flex items-center gap-4 text-gray-400 dark:text-gray-500 sepia:text-sepia-800">
+          <a href="#" class="hover:text-brand-600 transition-all transform hover:scale-110 animate-fade-in" title="Twitter"><i class="fa-brands fa-twitter text-lg"></i></a>
+          <a href="#" class="hover:text-brand-600 transition-all transform hover:scale-110" title="GitHub"><i class="fa-brands fa-github text-lg"></i></a>
+          <a href="#" class="hover:text-brand-600 transition-all transform hover:scale-110" title="LinkedIn"><i class="fa-brands fa-linkedin text-lg"></i></a>
+          <a href="#" class="hover:text-brand-600 transition-all transform hover:scale-110" title="Discord"><i class="fa-brands fa-discord text-lg"></i></a>
+        </div>
+
+        <!-- Copy / Legal -->
+        <div class="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500 sepia:text-sepia-800 font-medium">
+          <a href="#" class="hover:underline">Privacy Policy</a>
+          <span>•</span>
+          <a href="#" class="hover:underline">Terms of Service</a>
+          <span>•</span>
+          <span class="text-gray-400 dark:text-gray-500 sepia:text-sepia-800">&copy; <span id="footer-year">2023</span> Headline News. All rights reserved.</span>
+        </div>
+
+      </div>
+    </div>
+  </footer>
+
   <!-- Detailed Article Metadata / AI Insights Modal Overlay -->
   <div id="article-details-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-3xl w-full max-w-2xl shadow-2xl border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 overflow-hidden transform scale-95 transition-transform duration-300" id="article-details-modal-box">

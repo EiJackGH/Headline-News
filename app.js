@@ -468,12 +468,21 @@ document.addEventListener("DOMContentLoaded", () => {
   updateBookmarksCount();
   setupEventListeners();
   checkInternetExplorer();
+  initFooterYear();
 
   // Load Sim Shares details
   STOCK_DATA.forEach(stock => {
     stock.sharesOwned = parseInt(localStorage.getItem(`shares_${stock.symbol}`)) || 0;
   });
 });
+
+// Dynamic year for Footer
+function initFooterYear() {
+  const footerYear = document.getElementById("footer-year");
+  if (footerYear) {
+    footerYear.innerText = new Date().getFullYear();
+  }
+}
 
 // Internet Explorer Detection and Alert
 function checkInternetExplorer() {
@@ -1782,4 +1791,52 @@ function setupEventListeners() {
       }
     });
   }
+
+  // Footer Navigation & Interactive Action listeners
+  const footerNavFeed = document.getElementById("footer-nav-feed");
+  if (footerNavFeed) {
+    footerNavFeed.addEventListener("click", () => {
+      // Simulate click of header Real-time Feed tab
+      tabNewsDashboard.click();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  const footerNavExtractor = document.getElementById("footer-nav-extractor");
+  if (footerNavExtractor) {
+    footerNavExtractor.addEventListener("click", () => {
+      // Simulate click of header AI Extractor tab
+      tabAiExtractor.click();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  const footerNavBookmarks = document.getElementById("footer-nav-bookmarks");
+  if (footerNavBookmarks) {
+    footerNavBookmarks.addEventListener("click", () => {
+      // Toggle sidebar Bookmarks display if hidden, or scroll to it
+      if (bookmarksSidebarCard && bookmarksSidebarCard.classList.contains("hidden")) {
+        toggleBookmarksPanelBtn.click();
+      }
+      bookmarksSidebarCard.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  // Category filter handlers in the footer
+  const footerCatBtns = document.querySelectorAll(".footer-cat-btn");
+  footerCatBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const category = btn.getAttribute("data-category");
+      if (category) {
+        selectedCategory = category;
+        initCategories(); // Repaint Category Selector menu states
+        renderArticles();
+        if (activeArticleId) {
+          closeActiveReader();
+        }
+        tabNewsDashboard.click(); // Ensure news feed is showing
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    });
+  });
 }
