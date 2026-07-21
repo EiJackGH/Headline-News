@@ -59,6 +59,17 @@
 </head>
 <body class="bg-gray-50 text-gray-900 transition-colors duration-300 font-sans dark:bg-gray-900 dark:text-gray-100 sepia:bg-sepia-50 sepia:text-sepia-900 contrast:bg-black contrast:text-white">
 
+  <!-- Internet Explorer Warning Banner -->
+  <div id="ie-warning-banner" class="hidden bg-red-600 text-white text-center py-3 px-4 font-bold relative z-50 flex items-center justify-between shadow-md">
+    <div class="flex-1 text-center">
+      <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+      <span>Your Internet Explorer does not support Headline News</span>
+    </div>
+    <button id="close-ie-warning" class="text-white hover:text-red-200 transition-colors">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+  </div>
+
   <!-- Horizontal Live Market Ticker -->
   <div class="border-b border-gray-200 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:bg-black text-xs h-10 flex items-center overflow-hidden relative z-40">
     <div class="px-4 font-bold uppercase tracking-wider text-red-600 bg-red-100 dark:bg-red-950/40 dark:text-red-400 sepia:bg-sepia-200 h-full flex items-center z-10 shrink-0 border-r border-gray-200 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white gap-2">
