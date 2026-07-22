@@ -451,8 +451,8 @@ const readerAuthorAvatar = document.getElementById("reader-author-avatar");
 const readerContentText = document.getElementById("reader-content-text");
 const readingProgressBar = document.getElementById("reading-progress-bar");
 const readerBookmarkBtn = document.getElementById("reader-bookmark-btn");
-const bookmarksCountBadge = document.getElementById("bookmarks-count-badge");
-const toggleBookmarksPanelBtn = document.getElementById("toggle-bookmarks-panel-btn");
+const bookmarksCountBadges = document.querySelectorAll(".bookmarks-count-badge");
+const toggleBookmarksPanelBtns = document.querySelectorAll(".toggle-bookmarks-panel-btn");
 const bookmarksSidebarCard = document.getElementById("bookmarks-sidebar-card");
 const bookmarksListContainer = document.getElementById("bookmarks-list-container");
 const clearBookmarksBtn = document.getElementById("clear-bookmarks-btn");
@@ -1069,7 +1069,9 @@ window.toggleBookmark = function(id, event) {
 }
 
 function updateBookmarksCount() {
-  bookmarksCountBadge.innerText = bookmarks.length;
+  bookmarksCountBadges.forEach(badge => {
+    badge.innerText = bookmarks.length;
+  });
 }
 
 function updateReaderBookmarkButtonUI() {
@@ -1743,9 +1745,11 @@ function setupEventListeners() {
   });
 
   // Sidebar Bookmarks trigger panel visibility toggle
-  toggleBookmarksPanelBtn.addEventListener("click", () => {
-    bookmarksSidebarCard.classList.toggle("hidden");
-    renderBookmarksList();
+  toggleBookmarksPanelBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      bookmarksSidebarCard.classList.toggle("hidden");
+      renderBookmarksList();
+    });
   });
 
   clearBookmarksBtn.addEventListener("click", () => {
@@ -1921,7 +1925,9 @@ function setupEventListeners() {
     footerNavBookmarks.addEventListener("click", () => {
       // Toggle sidebar Bookmarks display if hidden, or scroll to it
       if (bookmarksSidebarCard && bookmarksSidebarCard.classList.contains("hidden")) {
-        toggleBookmarksPanelBtn.click();
+        if (toggleBookmarksPanelBtns.length > 0) {
+          toggleBookmarksPanelBtns[0].click();
+        }
       }
       bookmarksSidebarCard.scrollIntoView({ behavior: "smooth" });
     });

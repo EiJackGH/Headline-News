@@ -87,6 +87,20 @@
   <header class="sticky top-0 z-30 border-b border-gray-200 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white bg-white/95 dark:bg-gray-950/95 sepia:bg-sepia-100/95 contrast:bg-black/95 backdrop-blur shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16 gap-4">
+        <!-- Left Quick Actions (Mobile only) -->
+        <div class="flex items-center gap-2 md:hidden">
+          <!-- Mobile Menu Trigger -->
+          <button id="mobile-menu-btn" class="p-2 text-gray-600 dark:text-gray-300">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+
+          <!-- Bookmarks Count Indicator (Mobile) -->
+          <button class="toggle-bookmarks-panel-btn relative p-2 text-gray-600 dark:text-gray-300 hover:text-brand-600 transition-colors flex items-center gap-1 font-medium text-sm">
+            <i class="fa-regular fa-bookmark text-lg"></i>
+            <span class="bookmarks-count-badge absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
+          </button>
+        </div>
+
         <!-- Brand Logo -->
         <div class="flex items-center gap-3 shrink-0">
           <div class="bg-brand-600 text-white p-2 rounded-xl shadow-lg shadow-brand-500/20 flex items-center justify-center">
@@ -130,15 +144,10 @@
           </div>
 
           <!-- Bookmarks Count Indicator -->
-          <button id="toggle-bookmarks-panel-btn" class="relative p-2 text-gray-600 dark:text-gray-300 hover:text-brand-600 transition-colors flex items-center gap-1 font-medium text-sm">
+          <button class="toggle-bookmarks-panel-btn hidden md:flex relative p-2 text-gray-600 dark:text-gray-300 hover:text-brand-600 transition-colors flex items-center gap-1 font-medium text-sm">
             <i class="fa-regular fa-bookmark text-lg"></i>
             <span class="hidden sm:inline">Bookmarks</span>
-            <span id="bookmarks-count-badge" class="absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
-          </button>
-
-          <!-- Mobile Menu Trigger -->
-          <button id="mobile-menu-btn" class="md:hidden p-2 text-gray-600 dark:text-gray-300">
-            <i class="fa-solid fa-bars text-xl"></i>
+            <span class="bookmarks-count-badge absolute -top-1 -right-1 bg-brand-600 text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center font-bold">0</span>
           </button>
         </div>
       </div>
