@@ -218,6 +218,20 @@
           </div>
         </div>
 
+        <!-- System Operations / Demo Panel -->
+        <div class="bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 space-y-3">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 sepia:text-sepia-800 flex items-center gap-2">
+            <i class="fa-solid fa-gears"></i> System Operations
+          </h3>
+          <p class="text-[11px] text-gray-500 leading-relaxed">
+            Simulate or test various platform states, including network connections and database response times.
+          </p>
+          <button id="trigger-server-error-btn" class="w-full py-2.5 px-4 bg-red-50 hover:bg-red-100 dark:bg-red-950/40 dark:hover:bg-red-900/40 text-red-600 dark:text-red-400 font-bold text-xs rounded-xl border border-red-200 dark:border-red-900/60 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            Simulate Server Error
+          </button>
+        </div>
+
       </aside>
 
       <!-- Center Column: Main Content Portal (News feed, Active article reader, or Extract mode) -->
@@ -932,6 +946,39 @@
         </div>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Server Error Full Screen Overlay -->
+  <div id="server-error-screen" class="fixed inset-0 bg-gray-50/98 dark:bg-gray-900/98 sepia:bg-sepia-50/98 contrast:bg-black z-50 flex items-center justify-center p-4 hidden">
+    <div class="max-w-md w-full text-center space-y-6 px-4">
+      <!-- SVG Illustration -->
+      <div class="mx-auto w-64 h-52 flex items-center justify-center relative">
+        <img src="assets/problem-servers.svg" alt="Server error illustration" class="max-w-full max-h-full object-contain filter drop-shadow-lg">
+      </div>
+
+      <!-- Content -->
+      <div class="space-y-3">
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sepia:text-sepia-900 leading-tight">
+          Oops, There's a problem to our servers.
+        </h1>
+        <p class="text-sm text-gray-500 dark:text-gray-400 sepia:text-sepia-800 max-w-sm mx-auto leading-relaxed">
+          Our systems are currently experiencing unexpected technical difficulties. We are working hard to restore standard operational performance as quickly as possible.
+        </p>
+      </div>
+
+      <!-- Action Button / Loader -->
+      <div class="pt-2">
+        <button id="retry-server-btn" class="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-sm px-6 py-3 rounded-2xl shadow-md shadow-brand-500/20 hover:shadow-brand-500/30 transition-all focus:outline-none focus:ring-2 focus:ring-brand-500">
+          <i id="retry-btn-icon" class="fa-solid fa-arrow-rotate-right"></i>
+          <span id="retry-btn-text">Retry Connection</span>
+        </button>
+      </div>
+
+      <!-- Error details footer badge -->
+      <div class="text-[10px] text-gray-400 dark:text-gray-500 sepia:text-sepia-800 font-semibold tracking-wider uppercase">
+        Error Code: 503 · Service Unavailable
+      </div>
     </div>
   </div>
 
