@@ -1,4 +1,7 @@
-127.0.0.1 - - [22/Jul/2026 12:05:14] "HEAD / HTTP/1.1" 200 -
-127.0.0.1 - - [22/Jul/2026 12:05:54] "GET / HTTP/1.1" 200 -
-127.0.0.1 - - [22/Jul/2026 12:05:54] "GET /styles.css HTTP/1.1" 200 -
-127.0.0.1 - - [22/Jul/2026 12:05:54] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 12:43:54] "HEAD / HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 13:00:15] "HEAD /pages/privacy-policy.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 13:03:11] "GET /index.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 13:03:12] "GET /app.js HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 13:03:12] "GET /styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 13:03:16] "GET /pages/privacy-policy.html HTTP/1.1" 200 -
+127.0.0.1 - - [22/Jul/2026 13:03:21] "GET /pages/terms-of-service.html HTTP/1.1" 200 -
