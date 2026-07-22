@@ -16,6 +16,8 @@ const MOCK_ARTICLES = [
     popular: true,
     views: 12500,
     sponsored: true,
+    adVerificationStatus: "Verified Business",
+    country: "United States",
     content: [
       "In the modern era of hybrid work, communication overload is one of the biggest drivers of professional burnout. Teams are constantly bombarded with endless channels, direct messages, and continuous threads, making it difficult to find the information that actually matters.",
       "To solve this problem, Slack has integrated native AI capabilities directly into the workspace. With Slack AI, users can instantly summarize long channels, get key takeaways from missed threads, and search across their organization's entire knowledge base with conversational natural language questions.",
@@ -43,6 +45,8 @@ const MOCK_ARTICLES = [
     popular: true,
     views: 11200,
     sponsored: true,
+    adVerificationStatus: "Verified Advertiser",
+    country: "Canada",
     content: [
       "The rapid advancement of generative AI models has created an unprecedented demand for high-performance vector databases. To build effective Retrieval-Augmented Generation (RAG) systems, developers need database architectures that can store, index, and retrieve high-dimensional vector embeddings with millisecond-level latency.",
       "Enter DataStax Astra DB—a serverless vector database built on the proven power of Apache Cassandra. Astra DB provides developers with a production-ready, highly scalable platform designed specifically for real-time AI workloads.",
@@ -1551,6 +1555,11 @@ window.openArticleDetails = function(id, event) {
   const entities = document.getElementById("details-modal-entities");
   const readBtn = document.getElementById("details-modal-read-btn");
 
+  // New ad info fields
+  const adInfoBlock = document.getElementById("details-modal-ad-info");
+  const adVerificationEl = document.getElementById("details-modal-ad-verification");
+  const adCountryEl = document.getElementById("details-modal-ad-country");
+
   if (!modal || !box) return;
 
   // Set Headline & Badge
@@ -1558,10 +1567,18 @@ window.openArticleDetails = function(id, event) {
     headline.innerText = "Ad Details & AI Sponsor Insights";
     badge.innerText = "Sponsored";
     badge.className = "px-2.5 py-1 bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 font-bold rounded-lg text-xs uppercase tracking-wider";
+
+    // Show and populate ad details
+    if (adInfoBlock) adInfoBlock.classList.remove("hidden");
+    if (adVerificationEl) adVerificationEl.innerText = art.adVerificationStatus || "Verified Advertiser";
+    if (adCountryEl) adCountryEl.innerText = art.country || "Global";
   } else {
     headline.innerText = "Article Details & AI Analysis";
     badge.innerText = art.category;
     badge.className = "px-2.5 py-1 bg-brand-50 text-brand-600 dark:bg-brand-950/40 dark:text-brand-400 font-bold rounded-lg text-xs uppercase tracking-wider";
+
+    // Hide ad details block for normal articles
+    if (adInfoBlock) adInfoBlock.classList.add("hidden");
   }
 
   // Basic info
