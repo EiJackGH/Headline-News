@@ -336,6 +336,71 @@ let searchQuery = "";
 let sortBy = "latest";
 let bookmarks = JSON.parse(localStorage.getItem("news_bookmarks")) || [];
 let activeArticleId = null;
+let isInitialLoading = true;
+
+// 3b. Ghost UI Skeleton HTML Templates
+const CATEGORY_SKELETON_HTML = Array(7).fill(0).map(() => `
+  <div class="animate-pulse flex items-center justify-between px-3 py-2.5 rounded-xl bg-gray-100 dark:bg-gray-900/50 sepia:bg-sepia-200/50 contrast:border contrast:border-white">
+    <div class="flex items-center gap-2 w-2/3">
+      <div class="w-4 h-4 rounded bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700"></div>
+      <div class="h-3 bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700 rounded w-16"></div>
+    </div>
+    <div class="h-4 bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700 rounded-md w-6"></div>
+  </div>
+`).join('<div class="h-1"></div>');
+
+const NEWS_SKELETON_HTML = Array(3).fill(0).map(() => `
+  <div class="animate-pulse bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-2xl p-5 border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 shadow-sm flex flex-col justify-between gap-4">
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <div class="h-5 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-16"></div>
+        <div class="flex gap-2">
+          <div class="h-3 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-12"></div>
+          <div class="h-3 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-16"></div>
+        </div>
+      </div>
+      <div class="h-5 bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700 rounded w-11/12"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-full"></div>
+      <div class="h-4 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-3/4"></div>
+    </div>
+    <div class="flex items-center justify-between border-t border-gray-100 dark:border-gray-800 sepia:border-sepia-200 pt-3">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800"></div>
+        <div class="h-3 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-28"></div>
+      </div>
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800"></div>
+        <div class="w-16 h-8 rounded-lg bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800"></div>
+        <div class="w-16 h-8 rounded-lg bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700"></div>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+const MARKET_SKELETON_HTML = Array(5).fill(0).map(() => `
+  <div class="animate-pulse flex items-center justify-between p-2.5 rounded-xl bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 contrast:border contrast:border-white border border-gray-100 dark:border-gray-800/40">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-lg bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800"></div>
+      <div class="space-y-1">
+        <div class="h-3 bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700 rounded w-8"></div>
+        <div class="h-2.5 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-14"></div>
+      </div>
+    </div>
+    <div class="w-12 h-6 rounded bg-gray-100 dark:bg-gray-900/50 sepia:bg-sepia-100/50 contrast:bg-zinc-900"></div>
+    <div class="text-right space-y-1">
+      <div class="h-3 bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700 rounded w-12 ml-auto"></div>
+      <div class="h-2.5 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-10 ml-auto"></div>
+    </div>
+  </div>
+`).join('');
+
+const INSIGHTS_SKELETON_HTML = Array(3).fill(0).map(() => `
+  <div class="animate-pulse p-3 rounded-xl bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 border border-gray-100 dark:border-gray-800/60 space-y-2">
+    <div class="h-2.5 bg-gray-300 dark:bg-gray-700 sepia:bg-sepia-300 contrast:bg-zinc-700 rounded w-1/3"></div>
+    <div class="h-3 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-full"></div>
+    <div class="h-3 bg-gray-200 dark:bg-gray-800 sepia:bg-sepia-200 contrast:bg-zinc-800 rounded w-5/6"></div>
+  </div>
+`).join('');
 
 // Simulator Financial state
 let simCash = parseFloat(localStorage.getItem("sim_cash")) || 10000.00;
@@ -457,11 +522,7 @@ const chartPeriodSelectors = document.getElementById("chart-period-selectors");
 // 5. Initialize Application Features
 document.addEventListener("DOMContentLoaded", () => {
   initThemes();
-  initCategories();
-  initTicker();
-  initMarketWatch();
-  initInsights();
-  renderArticles();
+  setupInitialSkeletons();
   initSpeechSynthesis();
   startReadingTimer();
   updateReadingStatsUI();
@@ -474,7 +535,33 @@ document.addEventListener("DOMContentLoaded", () => {
   STOCK_DATA.forEach(stock => {
     stock.sharesOwned = parseInt(localStorage.getItem(`shares_${stock.symbol}`)) || 0;
   });
+
+  // Simulate server/API loading delay (1200ms)
+  setTimeout(() => {
+    isInitialLoading = false;
+    initCategories();
+    initTicker();
+    initMarketWatch();
+    initInsights();
+    renderArticles();
+
+    // Add fade-in effect to the loaded elements
+    const fadeTargets = [categoryNav, newsFeedContainer, marketListContainer, aiInsightsContainer];
+    fadeTargets.forEach(el => {
+      if (el) {
+        el.classList.add("fade-in");
+      }
+    });
+  }, 1200);
 });
+
+// Helper to show ghost loader skeletons initially
+function setupInitialSkeletons() {
+  if (categoryNav) categoryNav.innerHTML = CATEGORY_SKELETON_HTML;
+  if (newsFeedContainer) newsFeedContainer.innerHTML = NEWS_SKELETON_HTML;
+  if (marketListContainer) marketListContainer.innerHTML = MARKET_SKELETON_HTML;
+  if (aiInsightsContainer) aiInsightsContainer.innerHTML = INSIGHTS_SKELETON_HTML;
+}
 
 // Dynamic year for Footer
 function initFooterYear() {
@@ -752,6 +839,7 @@ function initInsights() {
 
 // 11. Article Rendering News Feed
 function renderArticles() {
+  if (isInitialLoading) return;
   newsFeedContainer.innerHTML = "";
 
   // Filter

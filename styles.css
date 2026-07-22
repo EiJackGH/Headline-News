@@ -188,3 +188,19 @@ body, header, aside, section, div, button, input, select, article, h1, h2, h3, h
   width: 60px;
   height: 24px;
 }
+
+/* Smooth content transition fade-in effect */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
