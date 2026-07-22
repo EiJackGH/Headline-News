@@ -522,6 +522,13 @@ const simSellBtn = document.getElementById("sim-sell-btn");
 const simTradeAlert = document.getElementById("sim-trade-alert");
 const chartPeriodSelectors = document.getElementById("chart-period-selectors");
 
+// Server Error Selectors
+const serverErrorScreen = document.getElementById("server-error-screen");
+const triggerServerErrorBtn = document.getElementById("trigger-server-error-btn");
+const retryServerBtn = document.getElementById("retry-server-btn");
+const retryBtnIcon = document.getElementById("retry-btn-icon");
+const retryBtnText = document.getElementById("retry-btn-text");
+
 
 // 5. Initialize Application Features
 document.addEventListener("DOMContentLoaded", () => {
@@ -1930,6 +1937,48 @@ function setupEventListeners() {
         }
       }
       bookmarksSidebarCard.scrollIntoView({ behavior: "smooth" });
+    });
+  }
+
+  // Server error simulator and retry logic
+  if (triggerServerErrorBtn) {
+    triggerServerErrorBtn.addEventListener("click", () => {
+      if (serverErrorScreen) {
+        serverErrorScreen.classList.remove("hidden");
+      }
+    });
+  }
+
+  if (retryServerBtn) {
+    retryServerBtn.addEventListener("click", () => {
+      // Disable button and show spinner
+      retryServerBtn.disabled = true;
+      if (retryBtnIcon) {
+        retryBtnIcon.className = "fa-solid fa-circle-notch animate-spin";
+      }
+      if (retryBtnText) {
+        retryBtnText.innerText = "Attempting Reconnection...";
+      }
+
+      // Simulate a 1.5s delay to "reconnect" to our mock server
+      setTimeout(() => {
+        // Hide error screen
+        if (serverErrorScreen) {
+          serverErrorScreen.classList.add("hidden");
+        }
+
+        // Restore button state
+        retryServerBtn.disabled = false;
+        if (retryBtnIcon) {
+          retryBtnIcon.className = "fa-solid fa-arrow-rotate-right";
+        }
+        if (retryBtnText) {
+          retryBtnText.innerText = "Retry Connection";
+        }
+
+        // Show a brief success alert of simulated recovery (optionally)
+        alert("Server connection successfully re-established!");
+      }, 1500);
     });
   }
 
