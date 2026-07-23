@@ -547,23 +547,20 @@ document.addEventListener("DOMContentLoaded", () => {
     stock.sharesOwned = parseInt(localStorage.getItem(`shares_${stock.symbol}`)) || 0;
   });
 
-  // Simulate server/API loading delay (1200ms)
-  setTimeout(() => {
-    isInitialLoading = false;
-    initCategories();
-    initTicker();
-    initMarketWatch();
-    initInsights();
-    renderArticles();
+  isInitialLoading = false;
+  initCategories();
+  initTicker();
+  initMarketWatch();
+  initInsights();
+  renderArticles();
 
-    // Add fade-in effect to the loaded elements
-    const fadeTargets = [categoryNav, newsFeedContainer, marketListContainer, aiInsightsContainer];
-    fadeTargets.forEach(el => {
-      if (el) {
-        el.classList.add("fade-in");
-      }
-    });
-  }, 1200);
+  // Add fade-in effect to the loaded elements
+  const fadeTargets = [categoryNav, newsFeedContainer, marketListContainer, aiInsightsContainer];
+  fadeTargets.forEach(el => {
+    if (el) {
+      el.classList.add("fade-in");
+    }
+  });
 });
 
 // Helper to show ghost loader skeletons initially
