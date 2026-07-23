@@ -70,6 +70,17 @@
     </button>
   </div>
 
+  <!-- No Internet Connection Warning Banner -->
+  <div id="offline-banner" class="hidden bg-amber-500 text-white text-center py-3 px-4 font-bold relative z-50 flex items-center justify-between shadow-md dark:bg-amber-600 sepia:bg-sepia-800 sepia:text-sepia-100 contrast:bg-black contrast:text-white contrast:border-b contrast:border-white">
+    <div class="flex-1 text-center">
+      <i class="fa-solid fa-wifi-slash mr-2"></i>
+      <span>No internet connection. Some features may be unavailable.</span>
+    </div>
+    <button id="close-offline-warning" class="text-white hover:text-amber-200 transition-colors contrast:text-white">
+      <i class="fa-solid fa-xmark text-lg"></i>
+    </button>
+  </div>
+
   <!-- Horizontal Live Market Ticker -->
   <div class="border-b border-gray-200 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:bg-black text-xs h-10 flex items-center overflow-hidden relative z-40">
     <div class="px-4 font-bold uppercase tracking-wider text-red-600 bg-red-100 dark:bg-red-950/40 dark:text-red-400 sepia:bg-sepia-200 h-full flex items-center z-10 shrink-0 border-r border-gray-200 dark:border-gray-800 sepia:border-sepia-200 contrast:border-white gap-2">
