@@ -14,9 +14,8 @@ This document lists the supported countries and territories categorized by conti
 - Central African Republic (CAR)
 - Chad
 - Comoros
-- Democratic Republic of the Congo
-- Republic of the Congo
 - Cote d'Ivoire
+- Democratic Republic of the Congo
 - Djibouti
 - Egypt
 - Equatorial Guinea
@@ -42,6 +41,7 @@ This document lists the supported countries and territories categorized by conti
 - Namibia
 - Niger
 - Nigeria
+- Republic of the Congo
 - Rwanda
 - Sao Tome and Principe
 - Senegal
@@ -163,6 +163,51 @@ This document lists the supported countries and territories categorized by conti
 - Tonga
 - Tuvalu
 - Vanuatu
+
+## Europe
+- Albania
+- Andorra
+- Austria
+- Belarus
+- Belgium
+- Bosnia and Herzegovina
+- Bulgaria
+- Croatia
+- Czech Republic
+- Denmark
+- Estonia
+- Finland
+- France
+- Germany
+- Greece
+- Hungary
+- Iceland
+- Ireland
+- Italy
+- Latvia
+- Liechtenstein
+- Lithuania
+- Luxembourg
+- Malta
+- Moldova
+- Monaco
+- Montenegro
+- Netherlands
+- North Macedonia
+- Norway
+- Poland
+- Portugal
+- Romania
+- San Marino
+- Serbia
+- Slovakia
+- Slovenia
+- Spain
+- Sweden
+- Switzerland
+- Ukraine
+- United Kingdom (UK)
+- Vatican City
 
 ### Unsupported Territories
 - Norfolk Island (Unsupported)
