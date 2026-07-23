@@ -540,6 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
   updateBookmarksCount();
   setupEventListeners();
   checkInternetExplorer();
+  checkNorfolkIsland();
   initFooterYear();
 
   // Load Sim Shares details
@@ -633,6 +634,32 @@ function checkInternetExplorer() {
       closeBtn.addEventListener("click", () => {
         banner.classList.add("hidden");
       });
+    }
+  }
+}
+
+// Norfolk Island Unsupported Territory Check
+function isNorfolkIsland() {
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    if (tz && tz.toLowerCase().includes("norfolk")) {
+      return true;
+    }
+  } catch (e) {
+    // Ignore error
+  }
+  return false;
+}
+
+function checkNorfolkIsland() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceNorfolk = urlParams.get("forceNorfolk") === "true" || urlParams.get("unsupported") === "norfolk" || urlParams.get("country") === "Norfolk Island";
+  const detectedNorfolk = isNorfolkIsland();
+
+  if (forceNorfolk || detectedNorfolk) {
+    const screen = document.getElementById("norfolk-unsupported-screen");
+    if (screen) {
+      screen.classList.remove("hidden");
     }
   }
 }
@@ -2118,6 +2145,17 @@ function setupEventListeners() {
         // Show a brief success alert of simulated recovery (optionally)
         alert("Server connection successfully re-established!");
       }, 1500);
+    });
+  }
+
+  // Norfolk unsupported screen close button
+  const closeNorfolkBtn = document.getElementById("close-norfolk-btn");
+  if (closeNorfolkBtn) {
+    closeNorfolkBtn.addEventListener("click", () => {
+      const screen = document.getElementById("norfolk-unsupported-screen");
+      if (screen) {
+        screen.classList.add("hidden");
+      }
     });
   }
 
