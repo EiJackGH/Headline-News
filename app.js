@@ -553,6 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initMarketWatch();
   initInsights();
   renderArticles();
+  initOfflineDetection();
 
   // Add fade-in effect to the loaded elements
   const fadeTargets = [categoryNav, newsFeedContainer, marketListContainer, aiInsightsContainer];
@@ -577,6 +578,40 @@ function initFooterYear() {
   if (footerYear) {
     footerYear.innerText = new Date().getFullYear();
   }
+}
+
+// Offline Connection Detection Engine
+function initOfflineDetection() {
+  const banner = document.getElementById("offline-banner");
+  const closeBtn = document.getElementById("close-offline-warning");
+
+  function updateConnectionStatus() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const forceOffline = urlParams.get("forceOffline") === "true";
+
+    if (!navigator.onLine || forceOffline) {
+      if (banner) {
+        banner.classList.remove("hidden");
+      }
+    } else {
+      if (banner) {
+        banner.classList.add("hidden");
+      }
+    }
+  }
+
+  // Setup event listeners for online/offline events
+  window.addEventListener("online", updateConnectionStatus);
+  window.addEventListener("offline", updateConnectionStatus);
+
+  if (closeBtn && banner) {
+    closeBtn.addEventListener("click", () => {
+      banner.classList.add("hidden");
+    });
+  }
+
+  // Initial status check
+  updateConnectionStatus();
 }
 
 // Internet Explorer Detection and Alert
