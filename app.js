@@ -555,6 +555,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initInsights();
   renderArticles();
   initOfflineDetection();
+  initPulsePoll();
 
   // Add fade-in effect to the loaded elements
   const fadeTargets = [categoryNav, newsFeedContainer, marketListContainer, aiInsightsContainer];
@@ -907,6 +908,79 @@ function initInsights() {
   });
 }
 
+// Reader Pulse Poll Logic
+const POLL_BASE = {
+  fusion: { name: "Fusion Energy", votes: 101 },
+  quantum: { name: "Quantum Computing", votes: 151 },
+  robots: { name: "Humanoid Robots", votes: 105 },
+  mars: { name: "Mars Colonization", votes: 63 }
+};
+
+function initPulsePoll() {
+  const userVote = localStorage.getItem("user_pulse_poll_vote");
+  const votingView = document.getElementById("poll-voting-view");
+  const resultsView = document.getElementById("poll-results-view");
+
+  if (!votingView || !resultsView) return;
+
+  if (userVote) {
+    votingView.classList.add("hidden");
+    resultsView.classList.remove("hidden");
+    renderPollResults(userVote);
+  } else {
+    votingView.classList.remove("hidden");
+    resultsView.classList.add("hidden");
+  }
+}
+
+function renderPollResults(userVote) {
+  const container = document.getElementById("poll-progress-container");
+  const totalVotesEl = document.getElementById("poll-total-votes");
+  if (!container || !totalVotesEl) return;
+
+  container.innerHTML = "";
+
+  // Calculate totals and percentages
+  let totalVotes = 0;
+  const pollData = {};
+  for (const key in POLL_BASE) {
+    pollData[key] = { ...POLL_BASE[key] };
+    if (userVote === key) {
+      pollData[key].votes += 1;
+    }
+    totalVotes += pollData[key].votes;
+  }
+
+  totalVotesEl.innerText = `Total: ${totalVotes.toLocaleString()} votes`;
+
+  // Draw each choice progress bar
+  for (const key in pollData) {
+    const option = pollData[key];
+    const pct = ((option.votes / totalVotes) * 100).toFixed(1);
+
+    const barWrapper = document.createElement("div");
+    barWrapper.className = "space-y-1";
+    barWrapper.innerHTML = `
+      <div class="flex justify-between text-[11px] font-semibold text-gray-700 dark:text-gray-300">
+        <span class="${userVote === key ? 'text-brand-600 dark:text-brand-400 font-extrabold flex items-center gap-1' : ''}">
+          ${userVote === key ? '<i class="fa-solid fa-circle-check"></i> ' : ''}${option.name}
+        </span>
+        <span>${pct}%</span>
+      </div>
+      <div class="h-2 w-full bg-gray-100 dark:bg-gray-850 sepia:bg-sepia-200 rounded-full overflow-hidden">
+        <div class="h-full rounded-full bg-brand-600 transition-all duration-1000" style="width: 0%" id="poll-bar-${key}"></div>
+      </div>
+    `;
+    container.appendChild(barWrapper);
+
+    // Animate the bar width with a tiny delay
+    setTimeout(() => {
+      const bar = document.getElementById(`poll-bar-${key}`);
+      if (bar) bar.style.width = `${pct}%`;
+    }, 50);
+  }
+}
+
 // 11. Article Rendering News Feed
 function renderArticles() {
   if (isInitialLoading) return;
@@ -1042,6 +1116,26 @@ function isOffline() {
 window.openActiveReader = function(id) {
   // Clear any existing TTS
   stopTTS();
+
+  // Reset AI Chat log and input
+  const chatLog = document.getElementById("reader-chat-log");
+  if (chatLog) {
+    chatLog.innerHTML = `
+      <!-- Initial Greeting -->
+      <div class="flex gap-2">
+        <div class="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-950/60 flex items-center justify-center font-bold text-brand-700 dark:text-brand-400 shrink-0">
+          AI
+        </div>
+        <div class="bg-brand-50 dark:bg-brand-950/40 sepia:bg-sepia-200/50 px-3 py-2 rounded-2xl max-w-[85%] text-gray-800 dark:text-gray-200">
+          Hello! I'm your AI Reading Assistant. Ask me anything about this article!
+        </div>
+      </div>
+    `;
+  }
+  const chatInput = document.getElementById("reader-chat-input");
+  if (chatInput) {
+    chatInput.value = "";
+  }
 
   const errorBlock = document.getElementById("reader-error-block");
   const errorText = document.getElementById("reader-error-text");
@@ -2176,4 +2270,121 @@ function setupEventListeners() {
       }
     });
   });
+
+  // AI Chat Assistant Event Listener
+  const readerChatForm = document.getElementById("reader-chat-form");
+  if (readerChatForm) {
+    readerChatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const inputEl = document.getElementById("reader-chat-input");
+      const logEl = document.getElementById("reader-chat-log");
+      if (!inputEl || !logEl || !activeArticleId) return;
+
+      const userText = inputEl.value.trim();
+      if (!userText) return;
+
+      // Append user message
+      const userMsgDiv = document.createElement("div");
+      userMsgDiv.className = "flex gap-2 justify-end";
+      userMsgDiv.innerHTML = `
+        <div class="bg-brand-600 text-white px-3 py-2 rounded-2xl max-w-[85%] text-right">
+          ${userText}
+        </div>
+      `;
+      logEl.appendChild(userMsgDiv);
+      inputEl.value = "";
+      logEl.scrollTop = logEl.scrollHeight;
+
+      // Append typing indicator
+      const typingIndicator = document.createElement("div");
+      typingIndicator.className = "flex gap-2 items-center text-gray-400 font-semibold italic animate-pulse py-1";
+      typingIndicator.id = "reader-chat-typing";
+      typingIndicator.innerHTML = `
+        <div class="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-950/60 flex items-center justify-center font-bold text-brand-700 dark:text-brand-400 shrink-0 not-italic">
+          AI
+        </div>
+        <span>AI is thinking...</span>
+      `;
+      logEl.appendChild(typingIndicator);
+      logEl.scrollTop = logEl.scrollHeight;
+
+      // Get article details
+      const art = MOCK_ARTICLES.find(a => a.id === activeArticleId);
+      const query = userText.toLowerCase();
+
+      setTimeout(() => {
+        // Remove typing indicator
+        const indicator = document.getElementById("reader-chat-typing");
+        if (indicator) indicator.remove();
+
+        let reply = "";
+        if (!art) {
+          reply = "I'm sorry, I couldn't access the details of the active article. Please make sure the article is loaded correctly.";
+        } else if (query.includes("summary") || query.includes("summarize") || query.includes("about") || query.includes("overview")) {
+          reply = `<strong>Executive Summary:</strong><br>${art.summary || "This article details " + art.excerpt}`;
+        } else if (query.includes("takeaway") || query.includes("key") || query.includes("points") || query.includes("learn")) {
+          const takeawaysList = art.takeaways ? art.takeaways.map(t => `<li>• ${t}</li>`).join("") : "<li>• No takeaways listed.</li>";
+          reply = `<strong>Key Takeaways:</strong><ul class="space-y-1 mt-1">${takeawaysList}</ul>`;
+        } else if (query.includes("entities") || query.includes("tag") || query.includes("subject") || query.includes("organization") || query.includes("who") || query.includes("company")) {
+          const entitiesList = art.entities ? art.entities.join(", ") : "None";
+          reply = `<strong>Associated Entities & Subjects:</strong><br>${entitiesList}`;
+        } else {
+          // General match response
+          reply = `Based on <em>"${art.title}"</em> by ${art.author}, the article talks about: <br> ${art.excerpt}<br><br>Let me know if you have any other questions!`;
+        }
+
+        const replyMsgDiv = document.createElement("div");
+        replyMsgDiv.className = "flex gap-2";
+        replyMsgDiv.innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-950/60 flex items-center justify-center font-bold text-brand-700 dark:text-brand-400 shrink-0">
+            AI
+          </div>
+          <div class="bg-brand-50 dark:bg-brand-950/40 sepia:bg-sepia-200/50 px-3 py-2 rounded-2xl max-w-[85%] text-gray-800 dark:text-gray-200">
+            ${reply}
+          </div>
+        `;
+        logEl.appendChild(replyMsgDiv);
+        logEl.scrollTop = logEl.scrollHeight;
+      }, 800);
+    });
+  }
+
+  // Reader Pulse Poll Event Listeners
+  const pulsePollForm = document.getElementById("pulse-poll-form");
+  if (pulsePollForm) {
+    pulsePollForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const checked = pulsePollForm.querySelector('input[name="breakthrough-poll"]:checked');
+      if (!checked) return;
+
+      const choice = checked.value;
+      localStorage.setItem("user_pulse_poll_vote", choice);
+
+      // Transition views
+      const votingView = document.getElementById("poll-voting-view");
+      const resultsView = document.getElementById("poll-results-view");
+      if (votingView && resultsView) {
+        votingView.classList.add("hidden");
+        resultsView.classList.remove("hidden");
+        renderPollResults(choice);
+      }
+    });
+  }
+
+  const pollResetBtn = document.getElementById("poll-reset-btn");
+  if (pollResetBtn) {
+    pollResetBtn.addEventListener("click", () => {
+      localStorage.removeItem("user_pulse_poll_vote");
+
+      const votingView = document.getElementById("poll-voting-view");
+      const resultsView = document.getElementById("poll-results-view");
+      if (votingView && resultsView) {
+        votingView.classList.remove("hidden");
+        resultsView.classList.add("hidden");
+        if (pulsePollForm) {
+          pulsePollForm.reset();
+        }
+      }
+    });
+  }
 }
