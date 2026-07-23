@@ -999,12 +999,80 @@ function renderArticles() {
   });
 }
 
+function isBrowserIE() {
+  const userAgent = window.navigator.userAgent;
+  const isIE = userAgent.indexOf("MSIE ") > -1 || userAgent.indexOf("Trident/") > -1 || !!document.documentMode;
+  const urlParams = new URLSearchParams(window.location.search);
+  return isIE || urlParams.get("forceIE") === "true";
+}
+
+function isOffline() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return !navigator.onLine || urlParams.get("forceOffline") === "true";
+}
+
 // 12. Active Premium Reader View Controls
 window.openActiveReader = function(id) {
-  const art = MOCK_ARTICLES.find(a => a.id === id);
-  if (!art) return;
+  // Clear any existing TTS
+  stopTTS();
 
+  const errorBlock = document.getElementById("reader-error-block");
+  const errorText = document.getElementById("reader-error-text");
+  const articleBody = document.getElementById("active-article-body");
+  const ttsBtn = document.getElementById("reader-tts-play-btn");
+  const bookmarkBtn = document.getElementById("reader-bookmark-btn");
+  const detailsBtn = document.getElementById("reader-details-btn");
+
+  // Show reader view, scroll to top
   activeArticleId = id;
+  viewNewsFeed.classList.add("hidden");
+  viewActiveReader.classList.remove("hidden");
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Handle errors
+  if (isBrowserIE()) {
+    if (errorBlock && errorText) {
+      errorText.innerText = "Error loading article, Your Internet Explorer is not supported, Please choose a different browser.";
+      errorBlock.classList.remove("hidden");
+    }
+    if (articleBody) articleBody.classList.add("hidden");
+    if (ttsBtn) ttsBtn.classList.add("hidden");
+    if (bookmarkBtn) bookmarkBtn.classList.add("hidden");
+    if (detailsBtn) detailsBtn.classList.add("hidden");
+    return;
+  }
+
+  if (isOffline()) {
+    if (errorBlock && errorText) {
+      errorText.innerText = "Error loading article, Please check your internet connection and try again.";
+      errorBlock.classList.remove("hidden");
+    }
+    if (articleBody) articleBody.classList.add("hidden");
+    if (ttsBtn) ttsBtn.classList.add("hidden");
+    if (bookmarkBtn) bookmarkBtn.classList.add("hidden");
+    if (detailsBtn) detailsBtn.classList.add("hidden");
+    return;
+  }
+
+  const art = MOCK_ARTICLES.find(a => a.id === id);
+  if (!art) {
+    if (errorBlock && errorText) {
+      errorText.innerText = "Error loading article";
+      errorBlock.classList.remove("hidden");
+    }
+    if (articleBody) articleBody.classList.add("hidden");
+    if (ttsBtn) ttsBtn.classList.add("hidden");
+    if (bookmarkBtn) bookmarkBtn.classList.add("hidden");
+    if (detailsBtn) detailsBtn.classList.add("hidden");
+    return;
+  }
+
+  // No error: restore elements and render article
+  if (errorBlock) errorBlock.classList.add("hidden");
+  if (articleBody) articleBody.classList.remove("hidden");
+  if (ttsBtn) ttsBtn.classList.remove("hidden");
+  if (bookmarkBtn) bookmarkBtn.classList.remove("hidden");
+  if (detailsBtn) detailsBtn.classList.remove("hidden");
 
   // Apply data details
   readerTitle.innerText = art.title;
@@ -1025,7 +1093,6 @@ window.openActiveReader = function(id) {
   readerAuthorAvatar.innerText = art.author.charAt(0);
 
   // Dynamic state for Reader details button
-  const detailsBtn = document.getElementById("reader-details-btn");
   const detailsBtnText = document.getElementById("reader-details-btn-text");
   if (detailsBtn && detailsBtnText) {
     if (art.sponsored) {
@@ -1082,6 +1149,8 @@ function handleReadingProgressScroll() {
 window.closeActiveReader = function() {
   activeArticleId = null;
   stopTTS();
+  const errorBlock = document.getElementById("reader-error-block");
+  if (errorBlock) errorBlock.classList.add("hidden");
   viewActiveReader.classList.add("hidden");
   viewNewsFeed.classList.remove("hidden");
   window.removeEventListener("scroll", handleReadingProgressScroll);
@@ -1262,8 +1331,42 @@ sampleUrlBtns.forEach(btn => {
 });
 
 function simulateExtraction(url) {
-  // Hide visual screens
+  const errorBlock = document.getElementById("extractor-error-block");
+  const errorText = document.getElementById("extractor-error-text");
+
+  // Hide visual screens initially
   extractionOutputContainer.classList.add("hidden");
+  extractionLoaderCard.classList.add("hidden");
+  if (errorBlock) errorBlock.classList.add("hidden");
+
+  if (isBrowserIE()) {
+    if (errorBlock && errorText) {
+      errorText.innerText = "Error loading article, Your Internet Explorer is not supported, Please choose a different browser.";
+      errorBlock.classList.remove("hidden");
+    }
+    return;
+  }
+
+  if (isOffline()) {
+    if (errorBlock && errorText) {
+      errorText.innerText = "Error loading article, Please check your internet connection and try again.";
+      errorBlock.classList.remove("hidden");
+    }
+    return;
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const forceGeneralError = urlParams.get("forceGeneralError") === "true";
+
+  if (forceGeneralError) {
+    if (errorBlock && errorText) {
+      errorText.innerText = "Error loading article";
+      errorBlock.classList.remove("hidden");
+    }
+    return;
+  }
+
+  // Otherwise, proceed to normal simulation
   extractionLoaderCard.classList.remove("hidden");
 
   // Step variables
@@ -1738,6 +1841,8 @@ function setupEventListeners() {
     tabAiExtractor.className = "flex-1 py-3 text-sm font-semibold rounded-xl flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400 sepia:text-sepia-800 hover:text-brand-600 dark:hover:text-brand-400 transition-all";
 
     viewAiExtractor.classList.add("hidden");
+    const extractorErrorBlock = document.getElementById("extractor-error-block");
+    if (extractorErrorBlock) extractorErrorBlock.classList.add("hidden");
     closeActiveReader(); // Default show feed
   });
 
@@ -1751,6 +1856,8 @@ function setupEventListeners() {
 
     viewNewsFeed.classList.add("hidden");
     viewActiveReader.classList.add("hidden");
+    const readerErrorBlock = document.getElementById("reader-error-block");
+    if (readerErrorBlock) readerErrorBlock.classList.add("hidden");
     viewAiExtractor.classList.remove("hidden");
   });
 

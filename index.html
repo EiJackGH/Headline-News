@@ -352,6 +352,15 @@
             </div>
           </div>
 
+          <!-- Reader Error Message Block -->
+          <div id="reader-error-block" class="hidden p-6 bg-red-50 dark:bg-red-950/20 sepia:bg-sepia-100 rounded-3xl border border-red-200 dark:border-red-900 text-center space-y-4 my-6">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600">
+              <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            </div>
+            <h3 class="font-extrabold text-lg text-gray-900 dark:text-white sepia:text-sepia-900">Unable to Display Article</h3>
+            <p id="reader-error-text" class="text-sm text-red-700 dark:text-red-400 font-semibold max-w-md mx-auto"></p>
+          </div>
+
           <!-- Active Article Document Container -->
           <article id="active-article-body" class="space-y-6">
             <!-- Programmatic variables dynamically applied to this container -->
@@ -457,6 +466,15 @@
                 </button>
               </div>
             </form>
+          </div>
+
+          <!-- Extractor Error Message Block -->
+          <div id="extractor-error-block" class="hidden p-6 bg-red-50 dark:bg-red-950/20 sepia:bg-sepia-100 rounded-3xl border border-red-200 dark:border-red-900 text-center space-y-4 my-6">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600">
+              <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+            </div>
+            <h3 class="font-extrabold text-lg text-gray-900 dark:text-white sepia:text-sepia-900">Extraction Failed</h3>
+            <p id="extractor-error-text" class="text-sm text-red-700 dark:text-red-400 font-semibold max-w-md mx-auto"></p>
           </div>
 
           <!-- Extraction Progress State Loader (hidden by default) -->
