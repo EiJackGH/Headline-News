@@ -78,6 +78,12 @@ body, header, aside, section, div, button, input, select, article, h1, h2, h3, h
   color: #ffffff !important;
 }
 
+.contrast header,
+.contrast footer {
+  background-color: #000000 !important;
+  border-color: #ffffff !important;
+}
+
 .contrast .bg-white,
 .contrast .bg-gray-50,
 .contrast .bg-gray-100,
@@ -106,6 +112,12 @@ body, header, aside, section, div, button, input, select, article, h1, h2, h3, h
 .contrast .border-gray-300,
 .contrast .border {
   border-color: #ffffff !important;
+}
+
+.contrast .bg-clip-text {
+  background: none !important;
+  color: #ffff00 !important; /* High contrast yellow */
+  -webkit-text-fill-color: #ffff00 !important;
 }
 
 /* Custom interactive active elements */
