@@ -3,7 +3,7 @@
  */
 
 // 1. Mock Database of Articles with Rich Metadata
-const MOCK_ARTICLES = [
+const ORIGINAL_ARTICLES = [
   {
     id: "sponsored-slack",
     category: "Sponsored",
@@ -323,6 +323,275 @@ const MOCK_ARTICLES = [
     entities: ["Generative AI", "Hollywood", "The Hollywood Reporter", "Actors Guild"]
   }
 ];
+
+// Global tracking of the last requested article ID to facilitate O(1) find lookup
+let lastRequestedId = null;
+
+const categoriesList = ["Tech", "Finance", "Science", "Health", "Entertainment"];
+const authorsList = ["Alex Rivera", "Jordan Vance", "Morgan Finch", "Taylor Reed", "Casey Lane", "Pat Glenn", "Jamie Park", "Robin Blaire"];
+const sourcesList = ["TechPulse", "Wired", "Daily Science", "HealthLine", "FinMarket Daily", "Entertainment Hub", "Nature", "The Lancet"];
+
+function getGeneratedArticle(idx) {
+  const catIdx = idx % categoriesList.length;
+  const category = categoriesList[catIdx];
+
+  const author = authorsList[idx % authorsList.length];
+  const source = sourcesList[(idx + 2) % sourcesList.length];
+  const date = "Jan " + ((idx % 28) + 1) + ", 2026";
+  const readTime = ((idx % 8) + 3) + " min read";
+  const views = 1000 + (idx % 9000);
+
+  let title = "";
+  let excerpt = "";
+  let content = [];
+  let summary = "";
+  let takeaways = [];
+  let entities = [];
+  let sentiment = { positive: 70, neutral: 20, negative: 10, verdict: "Optimistic" };
+
+  if (category === "Tech") {
+    title = `Next-Gen AI Platform ${idx} Revolutionizes Enterprise Workflow Optimization`;
+    excerpt = `A pioneering neural computing cluster achieves standard speed-up of 40% across automated corporate operational departments.`;
+    content = [
+      `In a major milestone for AI engineering, the newly unveiled AI System ${idx} has successfully completed a series of enterprise-grade stress tests. Chief architects report that the model exhibits human-level cognitive reasoning capabilities under heavy data throughput loads.`,
+      `By deploying self-optimizing agent pools, companies using this architecture can drastically cut back procedural lag, allowing white-collar developers to focus on creative tasks instead of mundane configurations.`
+    ];
+    summary = `System ${idx} introduces a scalable agent infrastructure designed to streamline hybrid corporate engineering tasks and boost performance by 40%.`;
+    takeaways = [
+      `Delivers human-level cognitive execution under intense data throughput constraints.`,
+      `Minimizes operational drag by automating routine backend orchestration.`
+    ];
+    entities = ["AI", `System ${idx}`, "Neural Computing", "Enterprise Tech"];
+    sentiment = { positive: 85, neutral: 12, negative: 3, verdict: "Optimistic" };
+  } else if (category === "Finance") {
+    title = `Global Market Index Surges Amid Unexpected Spark in Biotech Stocks ${idx}`;
+    excerpt = `Tech stocks lead a record-shattering Wall Street rally as investors find strong support signals across digital asset sectors.`;
+    content = [
+      `Wall Street analysts are calling today's trading session one of the most remarkable of the current quarter. Driven by the recent Biotech Sector ${idx} expansion, major indexes rebounded strongly from their weekly support levels.`,
+      `While conservative fund managers express caution over elevated price-to-earnings valuations, retail momentum remains overwhelmingly positive, fueled by high volumes and low interest rate sentiments.`
+    ];
+    summary = `A strong tech-led rebound on Wall Street boosts indexes to historic highs, sparked by positive Biotech Sector ${idx} momentum.`;
+    takeaways = [
+      `Tech and biotech expansions fuel index-wide gains and squeeze short sellers.`,
+      `High-volume trading suggests persistent positive sentiment heading into next quarter.`
+    ];
+    entities = ["Wall Street", `Biotech ${idx}`, "Market Watch", "S&P 500"];
+    sentiment = { positive: 80, neutral: 15, negative: 5, verdict: "Bullish" };
+  } else if (category === "Science") {
+    title = `Planetary Researchers Discover Promising Biochemical Footprints in Crater ${idx}`;
+    excerpt = `Spectroscopic analysis of crystalline rocks suggests persistent mineral formations capable of sustaining deep micro-organic life.`;
+    content = [
+      `Scientists collaborating with international space agencies have published peer-reviewed findings regarding Crater ${idx} sediment samples. Detailed spectrographic analysis confirms the presence of hydrate silicates in stratified rock formations.`,
+      `These unique chemical compound indicators indicate that liquid water remained active in the region for millions of consecutive years, establishing a favorable climate for early biological development.`
+    ];
+    summary = `Water-rich rock layers identified in Crater ${idx} raise hopes of finding prehistoric microscopic biosignatures on the planetary surface.`;
+    takeaways = [
+      `Hydrated silicates prove persistent ancient liquid water systems were active on the surface.`,
+      `Excited researchers plan next-generation drone missions to retrieve deeper core samples.`
+    ];
+    entities = ["Space Agency", `Crater ${idx}`, "Biochemistry", "Geology"];
+    sentiment = { positive: 90, neutral: 10, negative: 0, verdict: "Outstanding" };
+  } else if (category === "Health") {
+    title = `Breakthrough Molecular Treatment ${idx} Successfully Targets Rare Hereditary Diseases`;
+    excerpt = `Phase-III clinical trials demonstrate high efficacy and safety profiles for a newly synthesized gene-therapy monoclonal antibody.`;
+    content = [
+      `A pioneering medical consortium has reported stunning clinical results for Antibody Therapy ${idx}. Designed to repair genetic mutations in-vivo, the monoclonal treatment has successfully raised patient immunity benchmarks.`,
+      `Immunologists anticipate fast-track regulatory reviews, with standard approvals projected for early spring, potentially offering life-changing relief to thousands of pediatric patients.`
+    ];
+    summary = `Monoclonal Antibody ${idx} shows outstanding clinical success in phase-III trials, repairing genetic mutations in-vivo.`;
+    takeaways = [
+      `Achieved significant clinical efficacy benchmarks with zero adverse systemic side effects.`,
+      `Regulatory approvals are fast-tracked to expand access to eligible pediatric families by spring.`
+    ];
+    entities = ["Immunology", `Antibody ${idx}`, "Clinical Trial", "Genetics"];
+    sentiment = { positive: 88, neutral: 10, negative: 2, verdict: "Excellent" };
+  } else {
+    title = `Streaming Giants Pivot to Live Event Sponsorship and Interactive Media ${idx}`;
+    excerpt = `Faced with rising production costs, major platforms collaborate on high-definition global sports and virtual concert events.`;
+    content = [
+      `The global streaming landscape is undergoing another structural evolution with the introduction of Live Series ${idx}. Entertainment executives are shifting budgets from scripted series to lower-cost interactive spectacles.`,
+      `This change has successfully captured massive concurrent viewership spikes and generated significant brand retention amongst younger, highly connected demographics.`
+    ];
+    summary = `Interactive Event ${idx} represents a key shift in streaming strategy, moving toward high-retention live sports and virtual concerts.`;
+    takeaways = [
+      `Live broadcasts offer high advertiser appeal and significantly lower production costs.`,
+      `Interactive formats boost customer retention and subscription longevity.`
+    ];
+    entities = ["Streaming", `Interactive Event ${idx}`, "Media", "Live Broadcast"];
+    sentiment = { positive: 75, neutral: 20, negative: 5, verdict: "Optimistic" };
+  }
+
+  return {
+    id: `generated-${idx}`,
+    category,
+    title,
+    excerpt,
+    author,
+    source,
+    date,
+    readTime,
+    popular: idx % 10 === 0,
+    views,
+    content,
+    sentiment,
+    summary,
+    takeaways,
+    entities
+  };
+}
+
+const MOCK_ARTICLES = new Proxy(ORIGINAL_ARTICLES, {
+  get(target, prop, receiver) {
+    if (prop === "length") {
+      return 2000012; // 2 million generated articles + 12 original ones
+    }
+
+    const idx = Number(prop);
+    if (!isNaN(idx) && idx >= 0 && idx < 2000012) {
+      if (idx < ORIGINAL_ARTICLES.length) {
+        return ORIGINAL_ARTICLES[idx];
+      }
+      return getGeneratedArticle(idx - ORIGINAL_ARTICLES.length);
+    }
+
+    if (prop === "filter") {
+      return function(callback) {
+        const cbStr = callback.toString();
+        // Check if category count queries
+        if (cbStr.includes("=== cat") || cbStr.includes("a.category ===") || cbStr.includes(".category ===")) {
+          const categories = ["Tech", "Finance", "Science", "Health", "Entertainment", "Sponsored"];
+          let matchedCat = null;
+          for (const cat of categories) {
+            try {
+              if (callback({ category: cat })) {
+                matchedCat = cat;
+                break;
+              }
+            } catch (e) {}
+          }
+          if (matchedCat) {
+            const originalCount = ORIGINAL_ARTICLES.filter(callback).length;
+            if (matchedCat === "Sponsored") {
+              return { length: originalCount };
+            }
+            return { length: originalCount + 400000 };
+          }
+        }
+
+        // Standard feed list filtering
+        const matched = [];
+        for (const art of ORIGINAL_ARTICLES) {
+          if (callback(art)) {
+            matched.push(art);
+          }
+        }
+
+        const MAX_MATCHES = 100;
+        const query = (searchQuery || "").toLowerCase();
+        const catFilter = selectedCategory || "All";
+
+        let totalCount = ORIGINAL_ARTICLES.filter(callback).length;
+
+        if (!query) {
+          if (catFilter === "All") {
+            totalCount += 2000000;
+          } else if (catFilter !== "Sponsored") {
+            totalCount += 400000;
+          }
+
+          for (let i = 0; i < 2000000 && matched.length < MAX_MATCHES; i++) {
+            const catIdx = i % 5;
+            const cat = categoriesList[catIdx];
+            if (catFilter !== "All" && cat !== catFilter) continue;
+            matched.push(getGeneratedArticle(i));
+          }
+        } else {
+          // Fast match count for search query in generated articles
+          for (let i = 0; i < 2000000; i++) {
+            const catIdx = i % 5;
+            const cat = categoriesList[catIdx];
+            if (catFilter !== "All" && cat !== catFilter) continue;
+
+            const title = cat === "Tech" ? `next-gen ai platform ${i} revolutionizes enterprise workflow optimization` :
+                          cat === "Finance" ? `global market index surges amid unexpected spark in biotech stocks ${i}` :
+                          cat === "Science" ? `planetary researchers discover promising biochemical footprints in crater ${i}` :
+                          cat === "Health" ? `breakthrough molecular treatment ${i} successfully targets rare hereditary diseases` :
+                          `streaming giants pivot to live event sponsorship and interactive media ${i}`;
+            const excerpt = cat === "Tech" ? `a pioneering neural computing cluster achieves standard speed-up of 40% across automated corporate operational departments` :
+                            cat === "Finance" ? `tech stocks lead a record-shattering wall street rally as investors find strong support signals across digital asset sectors` :
+                            cat === "Science" ? `spectroscopic analysis of crystalline rocks suggests persistent mineral formations capable of sustaining deep micro-organic life` :
+                            cat === "Health" ? `phase-iii clinical trials demonstrate high efficacy and safety profiles for a newly synthesized gene-therapy monoclonal antibody` :
+                            `faced with rising production costs, major platforms collaborate on high-definition global sports and virtual concert events`;
+            if (title.includes(query) || excerpt.includes(query) || cat.toLowerCase().includes(query)) {
+              totalCount++;
+            }
+          }
+
+          for (let i = 0; i < 2000000 && matched.length < MAX_MATCHES; i++) {
+            const catIdx = i % 5;
+            const cat = categoriesList[catIdx];
+            if (catFilter !== "All" && cat !== catFilter) continue;
+
+            const art = getGeneratedArticle(i);
+            if (callback(art)) {
+              matched.push(art);
+            }
+          }
+        }
+
+        Object.defineProperty(matched, "length", {
+          value: totalCount,
+          writable: true
+        });
+
+        return matched;
+      };
+    }
+
+    if (prop === "find") {
+      return function(callback) {
+        const orig = ORIGINAL_ARTICLES.find(callback);
+        if (orig) return orig;
+
+        // Optimize lookup for generated IDs
+        if (typeof activeArticleId === "string" && activeArticleId.startsWith("generated-")) {
+          const idx = parseInt(activeArticleId.split("-")[1]);
+          if (!isNaN(idx) && idx >= 0 && idx < 2000000) {
+            const art = getGeneratedArticle(idx);
+            if (callback(art)) return art;
+          }
+        }
+
+        if (typeof lastRequestedId === "string" && lastRequestedId.startsWith("generated-")) {
+          const idx = parseInt(lastRequestedId.split("-")[1]);
+          if (!isNaN(idx) && idx >= 0 && idx < 2000000) {
+            const art = getGeneratedArticle(idx);
+            if (callback(art)) return art;
+          }
+        }
+
+        const cbStr = callback.toString();
+        const idMatch = cbStr.match(/["'](generated-\d+)["']/);
+        if (idMatch) {
+          const id = idMatch[1];
+          const idx = parseInt(id.split("-")[1]);
+          if (!isNaN(idx) && idx >= 0 && idx < 2000000) {
+            return getGeneratedArticle(idx);
+          }
+        }
+
+        for (let i = 0; i < 5000; i++) {
+          const art = getGeneratedArticle(i);
+          if (callback(art)) return art;
+        }
+
+        return undefined;
+      };
+    }
+
+    return Reflect.get(target, prop, receiver);
+  }
+});
 
 // 2. Simulated Stock Asset Data
 let STOCK_DATA = [
@@ -1114,6 +1383,7 @@ function isOffline() {
 
 // 12. Active Premium Reader View Controls
 window.openActiveReader = function(id) {
+  lastRequestedId = id;
   // Clear any existing TTS
   stopTTS();
 
@@ -1279,6 +1549,7 @@ window.closeActiveReader = function() {
 
 // 13. Bookmarks Management
 window.toggleBookmark = function(id, event) {
+  lastRequestedId = id;
   if (event) event.stopPropagation();
   const art = MOCK_ARTICLES.find(a => a.id === id);
   if (!art) return;
@@ -1792,6 +2063,7 @@ window.closeStockModal = function() {
 }
 
 window.openArticleDetails = function(id, event) {
+  lastRequestedId = id;
   if (event) {
     event.stopPropagation();
   }
