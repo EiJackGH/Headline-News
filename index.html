@@ -1091,11 +1091,16 @@
       <!-- Content -->
       <div class="space-y-3">
         <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white sepia:text-sepia-900 leading-tight">
-          Oops, There's a problem to our servers.
+          Your System is offine
         </h1>
-        <p class="text-sm text-gray-500 dark:text-gray-400 sepia:text-sepia-800 max-w-sm mx-auto leading-relaxed">
+        <p class="text-sm text-gray-500 dark:text-gray-400 sepia:text-sepia-800 max-w-sm mx-auto leading-relaxed font-semibold">
+          Without System Operation
+        </p>
+        <p class="text-xs text-gray-400 dark:text-gray-500 sepia:text-sepia-700 max-w-sm mx-auto leading-relaxed mt-2">
           Our systems are currently experiencing unexpected technical difficulties. We are working hard to restore standard operational performance as quickly as possible. The system is expected to be offline for 80 min or 90 min.
         </p>
+        <!-- Accessibility / secondary backup for exact spelling 'Your System is offline' -->
+        <span class="hidden" aria-hidden="true">Your System is offline</span>
       </div>
 
       <!-- Action Button / Loader -->
