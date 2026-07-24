@@ -444,6 +444,38 @@
               </div>
             </div>
           </div>
+
+          <!-- AI Chat Assistant Panel -->
+          <div id="reader-chat-panel" class="mt-8 pt-6 border-t border-gray-100 dark:border-gray-800 sepia:border-sepia-200 space-y-4">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 sepia:text-sepia-800 flex items-center gap-2">
+              <i class="fa-solid fa-comments text-brand-600 dark:text-brand-400"></i> AI Article Q&A Assistant
+            </h4>
+            <p class="text-xs text-gray-500 dark:text-gray-400 sepia:text-sepia-800">
+              Have questions about this article? Ask our AI assistant about the summary, takeaways, entities, or detailed insights of this piece.
+            </p>
+
+            <div id="reader-chat-log" class="border border-gray-100 dark:border-gray-800 sepia:border-sepia-300 rounded-2xl p-4 h-48 overflow-y-auto space-y-3 bg-gray-50/50 dark:bg-gray-900/30 sepia:bg-sepia-50/30 text-xs leading-relaxed">
+              <!-- Initial Greeting -->
+              <div class="flex gap-2">
+                <div class="w-6 h-6 rounded-full bg-brand-100 dark:bg-brand-950/60 flex items-center justify-center font-bold text-brand-700 dark:text-brand-400 shrink-0">
+                  AI
+                </div>
+                <div class="bg-brand-50 dark:bg-brand-950/40 sepia:bg-sepia-200/50 px-3 py-2 rounded-2xl max-w-[85%] text-gray-800 dark:text-gray-200">
+                  Hello! I'm your AI Reading Assistant. Ask me anything about this article!
+                </div>
+              </div>
+            </div>
+
+            <!-- Chat Input Area -->
+            <form id="reader-chat-form" class="flex gap-2">
+              <input type="text" id="reader-chat-input" placeholder="Ask a question about this article..." required
+                class="flex-1 px-4 py-2.5 border border-gray-200 dark:border-gray-800 sepia:border-sepia-300 rounded-xl bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 focus:outline-none focus:ring-2 focus:ring-brand-500 text-xs transition-all shadow-inner">
+              <button type="submit" id="reader-chat-send-btn" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all flex items-center gap-1.5">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Send</span>
+              </button>
+            </form>
+          </div>
         </div>
 
         <!-- VIEW 3: AI-Powered Article Extraction Portal -->
@@ -704,6 +736,54 @@
           </h3>
           <div class="space-y-4 text-xs leading-relaxed" id="ai-insights-container">
             <!-- Simulated real-time NLP bulletin items populated here -->
+          </div>
+        </div>
+
+        <!-- Reader Pulse Poll Widget (Sidebar) -->
+        <div class="bg-white dark:bg-gray-950 sepia:bg-sepia-100 contrast:border contrast:border-white rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 space-y-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 sepia:text-sepia-800 flex items-center gap-2">
+            <i class="fa-solid fa-square-poll-vertical text-brand-600 dark:text-brand-400"></i> Reader Pulse Poll
+          </h3>
+          <p id="poll-question" class="text-xs font-bold text-gray-800 dark:text-gray-200">
+            Which breakthrough will define the tech landscape of 2026?
+          </p>
+
+          <!-- Poll Voting View -->
+          <div id="poll-voting-view" class="space-y-3">
+            <form id="pulse-poll-form" class="space-y-2.5">
+              <label class="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 rounded-xl border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 cursor-pointer text-xs">
+                <input type="radio" name="breakthrough-poll" value="fusion" required class="accent-brand-600">
+                <span class="text-gray-700 dark:text-gray-300 font-medium">Fusion Energy</span>
+              </label>
+              <label class="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 rounded-xl border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 cursor-pointer text-xs">
+                <input type="radio" name="breakthrough-poll" value="quantum" class="accent-brand-600">
+                <span class="text-gray-700 dark:text-gray-300 font-medium">Quantum Computing</span>
+              </label>
+              <label class="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 rounded-xl border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 cursor-pointer text-xs">
+                <input type="radio" name="breakthrough-poll" value="robots" class="accent-brand-600">
+                <span class="text-gray-700 dark:text-gray-300 font-medium">Humanoid Robots</span>
+              </label>
+              <label class="flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-900 sepia:bg-sepia-50 rounded-xl border border-gray-100 dark:border-gray-800 sepia:border-sepia-200 cursor-pointer text-xs">
+                <input type="radio" name="breakthrough-poll" value="mars" class="accent-brand-600">
+                <span class="text-gray-700 dark:text-gray-300 font-medium">Mars Colonization</span>
+              </label>
+              <button type="submit" id="poll-vote-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs py-2.5 rounded-xl shadow-md transition-all">
+                Submit Vote
+              </button>
+            </form>
+          </div>
+
+          <!-- Poll Results View -->
+          <div id="poll-results-view" class="space-y-4 hidden">
+            <div class="space-y-3" id="poll-progress-container">
+              <!-- Dynamically populated bars -->
+            </div>
+            <div class="flex justify-between items-center pt-2 border-t border-gray-100 dark:border-gray-800">
+              <span class="text-[10px] text-gray-400" id="poll-total-votes">Total: 420 votes</span>
+              <button id="poll-reset-btn" class="text-[10px] text-brand-600 dark:text-brand-400 hover:underline font-bold">
+                Change Vote
+              </button>
+            </div>
           </div>
         </div>
 
